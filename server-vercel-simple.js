@@ -4,7 +4,7 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// In-memory storage for testing (will be replaced with KV later)
+// In-memory storage for testing (will be replaced with Upstash later)
 let submissions = [];
 
 // This allows Express to read form data
@@ -41,6 +41,7 @@ app.post('/submit', (req, res) => {
         <head><title>Thank You</title></head>
         <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #0a174e; color: #fff;">
           <h2>Thank you for submitting your favorite movies!</h2>
+          <p><strong>Note:</strong> This is using temporary storage. Data will be lost when the server restarts.</p>
           <form action="/submissions" method="get">
               <button type="submit" style="background: #1e90ff; color: #fff; border: none; border-radius: 8px; padding: 12px 32px; font-size: 1.1em; cursor: pointer;">See Everyone's Answers</button>
           </form>
@@ -72,6 +73,7 @@ app.get('/submissions', (req, res) => {
           <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #0a174e; color: #fff;">
             <h2>All Submissions</h2>
             <p>No submissions yet.</p>
+            <p><strong>Note:</strong> This is using temporary storage. Data will be lost when the server restarts.</p>
             <a href="/" style="color: #1e90ff;">Back to form</a>
           </body>
         </html>
@@ -88,6 +90,7 @@ app.get('/submissions', (req, res) => {
         <head><title>All Submissions</title></head>
         <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #0a174e; color: #fff;">
           <h2>All Submissions</h2>
+          <p><strong>Note:</strong> This is using temporary storage. Data will be lost when the server restarts.</p>
           <ul style="text-align: left; max-width: 800px; margin: 0 auto;">${entries}</ul>
           <br>
           <a href="/" style="color: #1e90ff;">Back to form</a>
