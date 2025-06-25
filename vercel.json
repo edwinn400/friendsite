@@ -2,18 +2,18 @@
   "version": 2,
   "builds": [
     {
-      "src": "server-vercel.js",
+      "src": "server-vercel-upstash.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/server-vercel.js"
+      "dest": "/server-vercel-upstash.js"
     }
   ],
   "functions": {
-    "server-vercel.js": {
+    "server-vercel-upstash.js": {
       "maxDuration": 30
     }
   }
