@@ -39,7 +39,6 @@ next-env.d.ts
 config.js
 
 # Old Express app files
-api/
 index.html
 vercel.json
 test-redis.js

@@ -59,7 +59,7 @@ export default function SubmissionsPage() {
           <div className="bg-gradient-to-br from-[rgba(20,30,60,0.95)] to-[rgba(30,50,100,0.95)] backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-[rgba(255,255,255,0.1)]">
             <div className="text-6xl mb-6">❌</div>
             <h1 className="font-[var(--font-orbitron)] text-3xl font-bold mb-4 text-red-400">
-              Error Loading Submissions
+              Submissions
             </h1>
             <p className="text-gray-300 mb-6">{error}</p>
             <div className="space-y-4">
