@@ -3,7 +3,7 @@ const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Initialize SQLite database
 const db = new sqlite3.Database('submissions.db', (err) => {
@@ -34,6 +34,9 @@ const db = new sqlite3.Database('submissions.db', (err) => {
 // This allows Express to read form data
 app.use(express.urlencoded({ extended: true }));
 
+// Serve static files (for Vercel compatibility)
+app.use(express.static(path.join(__dirname)));
+
 // Serve your index.html file
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
@@ -48,23 +51,38 @@ app.post('/submit', (req, res) => {
                 VALUES (?, ?, ?, ?, ?, ?)`;
   const params = [
     answers.name || 'Anonymous',
-    answers.movie1,
-    answers.movie2,
-    answers.movie3,
-    answers.movie4,
-    answers.movie5
+    answers.movie1 || '',
+    answers.movie2 || '',
+    answers.movie3 || '',
+    answers.movie4 || '',
+    answers.movie5 || ''
   ];
 
   db.run(sql, params, function(err) {
     if (err) {
       console.error('Error saving submission:', err);
-      res.send('There was an error saving your submission.');
+      res.status(500).send(`
+        <html>
+          <head><title>Error</title></head>
+          <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
+            <h2>There was an error saving your submission.</h2>
+            <a href="/" style="color: #1e90ff;">Back to form</a>
+          </body>
+        </html>
+      `);
     } else {
       res.send(`
-        <p>Thank you for submitting your favorite movies!</p>
-        <form action="/submissions" method="get">
-            <button type="submit">See Everyone's Answers</button>
-        </form>
+        <html>
+          <head><title>Thank You</title></head>
+          <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #0a174e; color: #fff;">
+            <h2>Thank you for submitting your favorite movies!</h2>
+            <form action="/submissions" method="get">
+                <button type="submit" style="background: #1e90ff; color: #fff; border: none; border-radius: 8px; padding: 12px 32px; font-size: 1.1em; cursor: pointer;">See Everyone's Answers</button>
+            </form>
+            <br>
+            <a href="/" style="color: #1e90ff;">Submit another response</a>
+          </body>
+        </html>
       `);
     }
   });
@@ -76,15 +94,28 @@ app.get('/submissions', (req, res) => {
   db.all(sql, [], (err, rows) => {
     if (err) {
       console.error('Error reading submissions:', err);
-      res.send('Error reading submissions.');
+      res.status(500).send(`
+        <html>
+          <head><title>Error</title></head>
+          <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
+            <h2>Error reading submissions.</h2>
+            <a href="/" style="color: #1e90ff;">Back to form</a>
+          </body>
+        </html>
+      `);
       return;
     }
     
     if (rows.length === 0) {
       res.send(`
-        <h2>All Submissions</h2>
-        <p>No submissions yet.</p>
-        <a href="/">Back to form</a>
+        <html>
+          <head><title>All Submissions</title></head>
+          <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #0a174e; color: #fff;">
+            <h2>All Submissions</h2>
+            <p>No submissions yet.</p>
+            <a href="/" style="color: #1e90ff;">Back to form</a>
+          </body>
+        </html>
       `);
       return;
     }
@@ -94,9 +125,15 @@ app.get('/submissions', (req, res) => {
     }).join('');
     
     res.send(`
-      <h2>All Submissions</h2>
-      <ul>${entries}</ul>
-      <a href="/">Back to form</a>
+      <html>
+        <head><title>All Submissions</title></head>
+        <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #0a174e; color: #fff;">
+          <h2>All Submissions</h2>
+          <ul style="text-align: left; max-width: 800px; margin: 0 auto;">${entries}</ul>
+          <br>
+          <a href="/" style="color: #1e90ff;">Back to form</a>
+        </body>
+      </html>
     `);
   });
 });
@@ -117,3 +154,6 @@ process.on('SIGINT', () => {
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
 });
+
+// Export for Vercel
+module.exports = app;
