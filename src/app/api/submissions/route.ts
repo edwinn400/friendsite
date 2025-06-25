@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { Redis } from '@upstash/redis';
 
 // Load local config if available (for development)
@@ -49,7 +49,7 @@ try {
   throw error;
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Get all submission IDs from the sorted set
     const submissionIds = await redis.zrange('submissions', 0, -1, { rev: true });

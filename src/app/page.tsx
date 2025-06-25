@@ -123,7 +123,7 @@ export default function Home() {
                 onClick={handleViewSubmissions}
                 className="bg-gradient-to-r from-[#1e90ff] to-[#00bfff] hover:from-[#00bfff] hover:to-[#1e90ff] text-white border-none rounded-2xl py-4 px-8 text-lg font-[var(--font-orbitron)] font-bold cursor-pointer transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg w-full"
               >
-                👥 See Everyone's Favorites
+                👥 See Everyone&apos;s Favorites
               </button>
               <button
                 onClick={resetForm}
