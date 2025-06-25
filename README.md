@@ -1,82 +1,36 @@
-# Friendsite - Movie Survey App
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-A simple web application where users can submit their favorite movies and view all submissions. Deployed on Vercel with serverless functions.
+## Getting Started
 
-## Features
+First, run the development server:
 
-- Submit your top 5 favorite movies with genres and explanations
-- View all submissions from other users
-- Modern, responsive UI with dark theme
-- Serverless deployment on Vercel
-- In-memory storage (temporary, will be upgraded to persistent storage)
-
-## Live Demo
-
-Visit the deployed app: [Your Vercel URL here]
-
-## Local Development
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/edwinn400/friendsite.git
-   cd friendsite
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-
-3. **Start the development server:**
-   ```bash
-   npm run dev
-   ```
-
-4. **Open your browser and go to `http://localhost:3000`**
-
-## Project Structure
-
-```
-friendsite/
-├── api/
-│   └── index.js          # Main Vercel serverless function
-├── index.html            # Frontend form
-├── package.json          # Dependencies and scripts
-├── vercel.json           # Vercel configuration
-├── README.md             # This file
-└── .gitignore           # Git ignore rules
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-## Deployment
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-This app is configured for automatic deployment on Vercel:
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-1. **Connect to GitHub** - Vercel automatically detects changes
-2. **Automatic builds** - Deploys on every push to main branch
-3. **Serverless functions** - Uses Vercel's API structure
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Technology Stack
+## Learn More
 
-- **Frontend:** HTML, CSS, JavaScript
-- **Backend:** Node.js, Express.js
-- **Deployment:** Vercel (serverless functions)
-- **Storage:** In-memory (temporary)
+To learn more about Next.js, take a look at the following resources:
 
-## Future Improvements
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-- [ ] Add persistent database (Upstash Redis or Vercel Postgres)
-- [ ] Add user authentication
-- [ ] Add movie search/autocomplete
-- [ ] Add submission editing
-- [ ] Add analytics and insights
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Contributing
+## Deploy on Vercel
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-## License
-
-ISC License
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
