@@ -11,19 +11,37 @@ try {
   // config.js doesn't exist, use environment variables
 }
 
+// Get the actual values being used
+const redisUrl = config.UPSTASH_REDIS_REST_URL || process.env.UPSTASH_REDIS_REST_URL;
+const redisToken = config.UPSTASH_REDIS_REST_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+
 // Debug: Log configuration (without sensitive data)
-console.log('Redis URL:', config.UPSTASH_REDIS_REST_URL || process.env.UPSTASH_REDIS_REST_URL ? 'Set' : 'Not set');
-console.log('Redis Token:', config.UPSTASH_REDIS_REST_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN ? 'Set' : 'Not set');
+console.log('Redis URL:', redisUrl ? 'Set' : 'Not set');
+console.log('Redis Token:', redisToken ? 'Set' : 'Not set');
+console.log('Redis URL length:', redisUrl ? redisUrl.length : 0);
+console.log('Redis Token length:', redisToken ? redisToken.length : 0);
+
+// Validate the URL format
+if (redisUrl) {
+  try {
+    new URL(redisUrl);
+    console.log('✅ Redis URL is valid');
+  } catch (error) {
+    console.error('❌ Redis URL is invalid:', error.message);
+  }
+}
 
 // Initialize Upstash Redis
 let redis;
 try {
+  console.log('🔧 Initializing Redis client...');
   redis = new Redis({
-    url: config.UPSTASH_REDIS_REST_URL || process.env.UPSTASH_REDIS_REST_URL,
-    token: config.UPSTASH_REDIS_REST_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN,
+    url: redisUrl,
+    token: redisToken,
   });
+  console.log('✅ Redis client initialized successfully');
 } catch (error) {
-  console.error('Error initializing Redis:', error);
+  console.error('❌ Error initializing Redis:', error);
   throw error;
 }
 
@@ -58,9 +76,14 @@ module.exports = async (req, res) => {
       submitted_at: new Date().toISOString()
     };
 
+    console.log('📝 Attempting to save submission:', submission.id);
+
     // Store in Upstash Redis
     await redis.set(`submission:${submission.id}`, submission);
+    console.log('✅ Submission saved to Redis');
+    
     await redis.zadd('submissions', { score: Date.now(), member: submission.id });
+    console.log('✅ Submission ID added to sorted set');
 
     res.setHeader('Content-Type', 'text/html');
     res.send(`
@@ -78,7 +101,13 @@ module.exports = async (req, res) => {
       </html>
     `);
   } catch (error) {
-    console.error('Error saving submission:', error);
+    console.error('❌ Error saving submission:', error);
+    console.error('Error details:', {
+      message: error.message,
+      stack: error.stack,
+      cause: error.cause
+    });
+    
     res.status(500).send(`
       <html>
         <head><title>Error</title></head>
