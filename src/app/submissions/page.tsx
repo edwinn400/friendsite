@@ -28,7 +28,7 @@ export default function SubmissionsPage() {
       const response = await fetch('/api/submissions');
       const result = await response.json();
 
-      if (result.success) {
+      if (response.ok && result.submissions !== undefined) {
         setSubmissions(result.submissions);
       } else {
         setError(result.error || 'Failed to load submissions');
