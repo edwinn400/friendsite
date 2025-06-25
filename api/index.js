@@ -41,7 +41,7 @@ app.post('/submit', (req, res) => {
         <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #0a174e; color: #fff;">
           <h2>Thank you for submitting your favorite movies!</h2>
           <p><strong>Note:</strong> This is using temporary storage. Data will be lost when the server restarts.</p>
-          <form action="/submissions" method="get">
+          <form action="/api/submissions" method="get">
               <button type="submit" style="background: #1e90ff; color: #fff; border: none; border-radius: 8px; padding: 12px 32px; font-size: 1.1em; cursor: pointer;">See Everyone's Answers</button>
           </form>
           <br>
