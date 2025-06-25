@@ -2,14 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Redis } from '@upstash/redis';
 
 // Load local config if available (for development)
-let config: any = {};
+let config: Record<string, string> = {};
 try {
   // Only try to load local config in development
   if (process.env.NODE_ENV === 'development') {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     config = require('../../../../config.js');
     console.log('✅ Loaded local config.js');
   }
-} catch (error) {
+} catch {
   console.log('⚠️  Local config.js not found, using environment variables');
   // config.js doesn't exist, use environment variables
 }

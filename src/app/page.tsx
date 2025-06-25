@@ -40,6 +40,7 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     
     try {
       const response = await fetch('/api/submit', {
@@ -69,6 +70,8 @@ export default function Home() {
     } catch (error) {
       console.error('Error:', error);
       alert('❌ Network error occurred');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -214,7 +217,7 @@ export default function Home() {
           </h1>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed mb-6">
             Share your top 5 favorite movies and discover what your friends love to watch. 
-            Let's build the ultimate movie recommendation community! 🎬
+            Let&apos;s build the ultimate movie recommendation community! 🎬
           </p>
           <a 
             href="/submissions" 
