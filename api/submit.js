@@ -1,10 +1,31 @@
 const { Redis } = require('@upstash/redis');
 
+// Load local config if available (for development)
+let config = {};
+try {
+  // Always try to load local config when running locally
+  config = require('../config.js');
+  console.log('✅ Loaded local config.js');
+} catch (error) {
+  console.log('⚠️  Local config.js not found, using environment variables');
+  // config.js doesn't exist, use environment variables
+}
+
+// Debug: Log configuration (without sensitive data)
+console.log('Redis URL:', config.UPSTASH_REDIS_REST_URL || process.env.UPSTASH_REDIS_REST_URL ? 'Set' : 'Not set');
+console.log('Redis Token:', config.UPSTASH_REDIS_REST_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN ? 'Set' : 'Not set');
+
 // Initialize Upstash Redis
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN,
-});
+let redis;
+try {
+  redis = new Redis({
+    url: config.UPSTASH_REDIS_REST_URL || process.env.UPSTASH_REDIS_REST_URL,
+    token: config.UPSTASH_REDIS_REST_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN,
+  });
+} catch (error) {
+  console.error('Error initializing Redis:', error);
+  throw error;
+}
 
 module.exports = async (req, res) => {
   // Set CORS headers
@@ -64,6 +85,7 @@ module.exports = async (req, res) => {
         <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
           <h2>There was an error saving your submission.</h2>
           <p>Error: ${error.message}</p>
+          <p>Stack: ${error.stack}</p>
           <a href="/" style="color: #1e90ff;">Back to form</a>
         </body>
       </html>
