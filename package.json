@@ -1,10 +1,8 @@
 {
   "name": "friendsite",
   "version": "1.0.0",
-  "main": "server-vercel-simple.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server-vercel-simple.js",
     "dev": "node server.js"
   },
   "keywords": [],
