@@ -1,5 +1,10 @@
-// In-memory storage (shared across function instances)
-let submissions = [];
+const { Redis } = require('@upstash/redis');
+
+// Initialize Upstash Redis
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
 
 module.exports = async (req, res) => {
   // Set CORS headers
@@ -20,7 +25,10 @@ module.exports = async (req, res) => {
   }
 
   try {
-    if (submissions.length === 0) {
+    // Get all submission IDs ordered by submission time (newest first)
+    const submissionIds = await redis.zrange('submissions', 0, -1, { rev: true });
+    
+    if (submissionIds.length === 0) {
       res.setHeader('Content-Type', 'text/html');
       res.send(`
         <html>
@@ -28,7 +36,7 @@ module.exports = async (req, res) => {
           <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #0a174e; color: #fff;">
             <h2>All Submissions</h2>
             <p>No submissions yet.</p>
-            <p><strong>Note:</strong> This is using temporary storage. Data will be lost when the server restarts.</p>
+            <p><strong>✅ Using persistent storage with Upstash Redis!</strong></p>
             <a href="/" style="color: #1e90ff;">Back to form</a>
           </body>
         </html>
@@ -36,9 +44,17 @@ module.exports = async (req, res) => {
       return;
     }
 
-    const entries = submissions.map(submission => {
-      return `<li><strong>${submission.name}</strong>: ${submission.movie1}, ${submission.movie2}, ${submission.movie3}, ${submission.movie4}, ${submission.movie5} <small>(submitted: ${new Date(submission.submitted_at).toLocaleString()})</small></li>`;
-    }).join('');
+    // Get all submissions
+    const submissions = await Promise.all(
+      submissionIds.map(id => redis.get(`submission:${id}`))
+    );
+
+    const entries = submissions
+      .filter(submission => submission) // Filter out any null values
+      .map(submission => {
+        return `<li><strong>${submission.name}</strong>: ${submission.movie1}, ${submission.movie2}, ${submission.movie3}, ${submission.movie4}, ${submission.movie5} <small>(submitted: ${new Date(submission.submitted_at).toLocaleString()})</small></li>`;
+      })
+      .join('');
     
     res.setHeader('Content-Type', 'text/html');
     res.send(`
@@ -46,7 +62,7 @@ module.exports = async (req, res) => {
         <head><title>All Submissions</title></head>
         <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #0a174e; color: #fff;">
           <h2>All Submissions</h2>
-          <p><strong>Note:</strong> This is using temporary storage. Data will be lost when the server restarts.</p>
+          <p><strong>✅ Using persistent storage with Upstash Redis!</strong></p>
           <ul style="text-align: left; max-width: 800px; margin: 0 auto;">${entries}</ul>
           <br>
           <a href="/" style="color: #1e90ff;">Back to form</a>
@@ -60,6 +76,7 @@ module.exports = async (req, res) => {
         <head><title>Error</title></head>
         <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
           <h2>Error reading submissions.</h2>
+          <p>Error: ${error.message}</p>
           <a href="/" style="color: #1e90ff;">Back to form</a>
         </body>
       </html>

@@ -1,7 +1,10 @@
-const express = require('express');
+const { Redis } = require('@upstash/redis');
 
-// In-memory storage (shared across function instances)
-let submissions = [];
+// Initialize Upstash Redis
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
 
 module.exports = async (req, res) => {
   // Set CORS headers
@@ -34,8 +37,9 @@ module.exports = async (req, res) => {
       submitted_at: new Date().toISOString()
     };
 
-    // Store in memory (temporary)
-    submissions.unshift(submission);
+    // Store in Upstash Redis
+    await redis.set(`submission:${submission.id}`, submission);
+    await redis.zadd('submissions', { score: Date.now(), member: submission.id });
 
     res.setHeader('Content-Type', 'text/html');
     res.send(`
@@ -43,7 +47,7 @@ module.exports = async (req, res) => {
         <head><title>Thank You</title></head>
         <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #0a174e; color: #fff;">
           <h2>Thank you for submitting your favorite movies!</h2>
-          <p><strong>Note:</strong> This is using temporary storage. Data will be lost when the server restarts.</p>
+          <p><strong>✅ Data saved to persistent storage!</strong></p>
           <form action="/api/submissions" method="get">
               <button type="submit" style="background: #1e90ff; color: #fff; border: none; border-radius: 8px; padding: 12px 32px; font-size: 1.1em; cursor: pointer;">See Everyone's Answers</button>
           </form>
@@ -59,6 +63,7 @@ module.exports = async (req, res) => {
         <head><title>Error</title></head>
         <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
           <h2>There was an error saving your submission.</h2>
+          <p>Error: ${error.message}</p>
           <a href="/" style="color: #1e90ff;">Back to form</a>
         </body>
       </html>
