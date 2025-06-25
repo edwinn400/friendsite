@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <head>
+    <meta charset="UTF-8">
+    <title>FRIENDSITE</title>
+    <!-- Google Fonts: Orbitron -->
+    <link href="https://fonts.googleapis.com/css?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+        background: #0a174e; /* dark blue */
+        color: #fff;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        }
+        h1 {
+        font-family: 'Orbitron', Arial, sans-serif;
+        font-size: 3em;
+        margin-top: 40px;
+        letter-spacing: 0.1em;
+        }
+        form {
+            background: rgba(20, 30, 60, 0.85);
+            border-radius: 16px;
+            padding: 32px 24px;
+            margin-top: 24px;
+            display: inline-block;
+            text-align: center; /* Center the content inside the form */
+            box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+            min-width: 420px; /* Widen the form */
+            max-width: 600px;
+        }
+        label {
+        font-weight: bold;
+        display: block;
+        margin-top: 16px;
+        margin-bottom: 4px;
+        }
+        input[type="text"], textarea {
+        width: 100%;
+        padding: 8px;
+        border-radius: 6px;
+        border: none;
+        margin-bottom: 12px;
+        font-size: 1em;
+        background: #112266;
+        color: #fff;
+        }
+        textarea {
+        resize: vertical;
+        }
+        .genre-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two columns */
+            gap: 4px 16px;
+            justify-items: start;
+            margin-bottom: 12px;
+            margin-top: 8px;
+            text-align: left;
+        }
+        .genre-group label {
+            font-weight: normal;
+            display: flex;
+            align-items: center;
+            margin-right: 0;
+        }
+        button {
+        background: #1e90ff;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 32px;
+        font-size: 1.1em;
+        font-family: 'Orbitron', Arial, sans-serif;
+        cursor: pointer;
+        margin-top: 16px;
+        transition: background 0.2s;
+        }
+        button:hover {
+        background: #00bfff;
+        }
+    </style>
+</head>
+<body>
+  <h1>FRIENDSITE</h1>
+  <form id="movieForm" method="POST" action="/submit">
+    <div>
+    <label for="name">Your Name</label><br>
+    <input type="text" id="name" name="name" placeholder="Enter your name">
+    </div>
+    <div>
+        <label for="movie1">Movie 1</label><br>
+        <input type="text" id="movie1" name="movie1" placeholder="Movie 1"><br>
+
+        <span>Genre? (Check all that apply):</span>
+        <div class="genre-group">
+        <label><input type="checkbox" name="movie1_genre" value="Action/Adventure"> Action/Adventure</label>
+        <label><input type="checkbox" name="movie1_genre" value="Comedy"> Comedy</label>
+        <label><input type="checkbox" name="movie1_genre" value="Coming of Age"> Coming of Age</label>
+        <label><input type="checkbox" name="movie1_genre" value="Romance"> Romance</label>
+        <label><input type="checkbox" name="movie1_genre" value="Fantasy/Sci Fi"> Fantasy/Sci Fi</label>
+        <label><input type="checkbox" name="movie1_genre" value="Historic/Period"> Historic/Period</label>
+        <label><input type="checkbox" name="movie1_genre" value="Horror/Thriller"> Horror/Thriller</label>
+        <label><input type="checkbox" name="movie1_genre" value="Mystery"> Mystery</label>
+        <label><input type="checkbox" name="movie1_genre" value="Defies the confines of genre"> Defies the confines of genre</label>
+        </div>
+
+        <label for="movie1_why">Why do you like it?</label><br>
+        <textarea id="movie1_why" name="movie1_why" rows="3" cols="40" placeholder="Tell us why you love this movie!"></textarea>
+    </div>
+    <br>
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html>
+
