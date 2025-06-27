@@ -22,11 +22,18 @@ const orbitron = Orbitron({
 export const metadata: Metadata = {
   title: "FRIENDSITE",
   description: "Share your favorite movies with friends",
-  icons: {
-    icon: '/logo.png',
-    shortcut: '/logo.png',
-    apple: '/logo.png',
-  },
+  icons: [
+    {
+      rel: 'icon',
+      url: '/logo.png',
+      type: 'image/png',
+    },
+    {
+      rel: 'apple-touch-icon',
+      url: '/logo.png',
+      type: 'image/png',
+    },
+  ],
 };
 
 export default function RootLayout({

@@ -1,6 +1,171 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
+import Image from "next/image";
+
+// Custom Cursor Component - Efficient Version
+const CustomCursor = () => {
+  useEffect(() => {
+    const cursor = document.getElementById('custom-cursor');
+    const trails = Array.from({ length: 7 }, (_, i) => document.getElementById(`trail-${i + 1}`));
+    
+    let mouseX = 0, mouseY = 0;
+    let cursorX = 0, cursorY = 0;
+    let trailPositions = Array(7).fill(null).map(() => ({ x: 0, y: 0 }));
+    let animationId: number;
+    
+    const updateCursor = () => {
+      // Smooth cursor movement with easing
+      cursorX += (mouseX - cursorX) * 0.15;
+      cursorY += (mouseY - cursorY) * 0.15;
+      
+      if (cursor) {
+        cursor.style.setProperty('--cursor-x', `${cursorX}px`);
+        cursor.style.setProperty('--cursor-y', `${cursorY}px`);
+      }
+      
+      // Update trail positions with staggered easing
+      trailPositions.forEach((pos, i) => {
+        const targetX = i === 0 ? cursorX : trailPositions[i - 1].x;
+        const targetY = i === 0 ? cursorY : trailPositions[i - 1].y;
+        
+        pos.x += (targetX - pos.x) * 0.3;
+        pos.y += (targetY - pos.y) * 0.3;
+        
+        if (trails[i]) {
+          trails[i].style.setProperty('--trail-x', `${pos.x}px`);
+          trails[i].style.setProperty('--trail-y', `${pos.y}px`);
+        }
+      });
+      
+      animationId = requestAnimationFrame(updateCursor);
+    };
+    
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    };
+    
+    const handleMouseLeave = () => {
+      document.body.classList.add('cursor-hidden');
+    };
+    
+    const handleMouseEnter = () => {
+      document.body.classList.remove('cursor-hidden');
+    };
+    
+    document.addEventListener('mousemove', handleMouseMove, { passive: true });
+    document.addEventListener('mouseleave', handleMouseLeave);
+    document.addEventListener('mouseenter', handleMouseEnter);
+    
+    updateCursor();
+    
+    return () => {
+      cancelAnimationFrame(animationId);
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseleave', handleMouseLeave);
+      document.removeEventListener('mouseenter', handleMouseEnter);
+    };
+  }, []);
+
+  return (
+    <>
+      {/* Main cursor */}
+      <div
+        id="custom-cursor"
+        className="custom-cursor"
+        style={{
+          '--cursor-x': '0px',
+          '--cursor-y': '0px',
+          left: 'var(--cursor-x)',
+          top: 'var(--cursor-y)'
+        } as React.CSSProperties}
+      />
+      
+      {/* Trail dots */}
+      {Array.from({ length: 7 }, (_, i) => (
+        <div
+          key={i}
+          id={`trail-${i + 1}`}
+          className="cursor-trail"
+          style={{
+            '--trail-x': '0px',
+            '--trail-y': '0px',
+            left: 'var(--trail-x)',
+            top: 'var(--trail-y)'
+          } as React.CSSProperties}
+        />
+      ))}
+    </>
+  );
+};
+
+// Animated Frog Component - can be used for different types
+const AnimatedFrog = ({ type = 'default' }: { type?: string }) => {
+  const [currentFrog, setCurrentFrog] = useState(0);
+  
+  // Different frog sequences for different types
+  const frogSequences = {
+    movies: [
+      '/woahfrog_png.png',
+      '/blinkyfrog.png', 
+      '/rainbowfrog.png',
+      '/blinkyfrog.png',
+      '/woahfrog_png.png',
+      '/alienfrog.png'
+    ],
+    shows: [
+      '/blinkyfrog.png',
+      '/rainbowfrog.png',
+      '/alienfrog.png',
+      '/woahfrog_png.png',
+      '/blinkyfrog.png',
+      '/rainbowfrog.png'
+    ],
+    music: [
+      '/rainbowfrog.png',
+      '/alienfrog.png',
+      '/woahfrog_png.png',
+      '/blinkyfrog.png',
+      '/rainbowfrog.png',
+      '/alienfrog.png'
+    ],
+    books: [
+      '/alienfrog.png',
+      '/woahfrog_png.png',
+      '/blinkyfrog.png',
+      '/rainbowfrog.png',
+      '/alienfrog.png',
+      '/woahfrog_png.png'
+    ],
+    default: [
+      '/woahfrog_png.png',
+      '/blinkyfrog.png', 
+      '/rainbowfrog.png',
+      '/alienfrog.png'
+    ]
+  };
+
+  const frogs = frogSequences[type as keyof typeof frogSequences] || frogSequences.default;
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentFrog((prev) => (prev + 1) % frogs.length);
+    }, 2000); // Change every 2 seconds
+
+    return () => clearInterval(interval);
+  }, [frogs.length]);
+
+  return (
+    <Image
+      src={frogs[currentFrog]}
+      alt="Animated Frog"
+      width={48}
+      height={48}
+      className="inline-block"
+    />
+  );
+};
 
 interface FormData {
   name: string;
@@ -9,351 +174,630 @@ interface FormData {
   movie3: string;
   movie4: string;
   movie5: string;
+  genres1: string[];
+  genres2: string[];
+  genres3: string[];
+  genres4: string[];
+  genres5: string[];
+  why1: string;
+  why2: string;
+  why3: string;
+  why4: string;
+  why5: string;
 }
 
-interface Submission {
-  id: string;
+interface ShowFormData {
   name: string;
-  movie1: string;
-  movie2: string;
-  movie3: string;
-  movie4: string;
-  movie5: string;
-  submitted_at: string;
+  show1: string;
+  show2: string;
+  show3: string;
+  show4: string;
+  show5: string;
+  genres1: string[];
+  genres2: string[];
+  genres3: string[];
+  genres4: string[];
+  genres5: string[];
+  why1: string;
+  why2: string;
+  why3: string;
+  why4: string;
+  why5: string;
+}
+
+interface MusicFormData {
+  name: string;
+  music1: string;
+  music2: string;
+  music3: string;
+  music4: string;
+  music5: string;
+  why1: string;
+  why2: string;
+  why3: string;
+  why4: string;
+  why5: string;
+}
+
+interface BookFormData {
+  name: string;
+  book1: string;
+  book2: string;
+  book3: string;
+  book4: string;
+  book5: string;
+  why1: string;
+  why2: string;
+  why3: string;
+  why4: string;
+  why5: string;
 }
 
 export default function Home() {
+  const [activeTab, setActiveTab] = useState<string>("movies");
   const [formData, setFormData] = useState<FormData>({
-    name: '',
-    movie1: '',
-    movie2: '',
-    movie3: '',
-    movie4: '',
-    movie5: '',
+    name: "",
+    movie1: "",
+    movie2: "",
+    movie3: "",
+    movie4: "",
+    movie5: "",
+    genres1: [],
+    genres2: [],
+    genres3: [],
+    genres4: [],
+    genres5: [],
+    why1: "",
+    why2: "",
+    why3: "",
+    why4: "",
+    why5: "",
   });
-
+  const [showFormData, setShowFormData] = useState<ShowFormData>({
+    name: "",
+    show1: "",
+    show2: "",
+    show3: "",
+    show4: "",
+    show5: "",
+    genres1: [],
+    genres2: [],
+    genres3: [],
+    genres4: [],
+    genres5: [],
+    why1: "",
+    why2: "",
+    why3: "",
+    why4: "",
+    why5: "",
+  });
+  const [musicFormData, setMusicFormData] = useState<MusicFormData>({
+    name: "",
+    music1: "",
+    music2: "",
+    music3: "",
+    music4: "",
+    music5: "",
+    why1: "",
+    why2: "",
+    why3: "",
+    why4: "",
+    why5: "",
+  });
+  const [bookFormData, setBookFormData] = useState<BookFormData>({
+    name: "",
+    book1: "",
+    book2: "",
+    book3: "",
+    book4: "",
+    book5: "",
+    why1: "",
+    why2: "",
+    why3: "",
+    why4: "",
+    why5: "",
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [showSubmissions, setShowSubmissions] = useState(false);
-  const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Handle form input changes
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, formType: string) => {
+    const { name, value } = e.target;
+    
+    switch (formType) {
+      case 'movies':
+        setFormData(prev => ({ ...prev, [name]: value }));
+        break;
+      case 'shows':
+        setShowFormData(prev => ({ ...prev, [name]: value }));
+        break;
+      case 'music':
+        setMusicFormData(prev => ({ ...prev, [name]: value }));
+        break;
+      case 'books':
+        setBookFormData(prev => ({ ...prev, [name]: value }));
+        break;
+    }
+  };
+
+  // Handle form submissions
+  const handleSubmit = async (e: React.FormEvent, type: string) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+    setError(null);
+
     try {
+      let submissionData;
+      
+      switch (type) {
+        case 'movies':
+          submissionData = {
+            ...formData,
+            name: formData.name || 'Anonymous'
+          };
+          break;
+        case 'shows':
+          submissionData = {
+            ...showFormData,
+            name: showFormData.name || 'Anonymous'
+          };
+          break;
+        case 'music':
+          submissionData = {
+            ...musicFormData,
+            name: musicFormData.name || 'Anonymous'
+          };
+          break;
+        case 'books':
+          submissionData = {
+            ...bookFormData,
+            name: bookFormData.name || 'Anonymous'
+          };
+          break;
+        default:
+          throw new Error('Invalid submission type');
+      }
+
       const response = await fetch('/api/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(submissionData),
       });
 
       const result = await response.json();
 
       if (result.success) {
-        alert('✅ Your submission was saved successfully!');
-        // Reset form
+        // Reset form data
         setFormData({
-          name: '',
-          movie1: '',
-          movie2: '',
-          movie3: '',
-          movie4: '',
-          movie5: '',
+          name: formData.name, // Keep the name
+          movie1: "",
+          movie2: "",
+          movie3: "",
+          movie4: "",
+          movie5: "",
+          genres1: [],
+          genres2: [],
+          genres3: [],
+          genres4: [],
+          genres5: [],
+          why1: "",
+          why2: "",
+          why3: "",
+          why4: "",
+          why5: "",
         });
+        setShowFormData({
+          name: showFormData.name, // Keep the name
+          show1: "",
+          show2: "",
+          show3: "",
+          show4: "",
+          show5: "",
+          genres1: [],
+          genres2: [],
+          genres3: [],
+          genres4: [],
+          genres5: [],
+          why1: "",
+          why2: "",
+          why3: "",
+          why4: "",
+          why5: "",
+        });
+        setMusicFormData({
+          name: musicFormData.name, // Keep the name
+          music1: "",
+          music2: "",
+          music3: "",
+          music4: "",
+          music5: "",
+          why1: "",
+          why2: "",
+          why3: "",
+          why4: "",
+          why5: "",
+        });
+        setBookFormData({
+          name: bookFormData.name, // Keep the name
+          book1: "",
+          book2: "",
+          book3: "",
+          book4: "",
+          book5: "",
+          why1: "",
+          why2: "",
+          why3: "",
+          why4: "",
+          why5: "",
+        });
+        
+        alert(result.message);
       } else {
-        alert(`❌ Error: ${result.error || 'Failed to submit form'}`);
+        setError(result.error || 'Failed to submit');
       }
     } catch (error) {
-      console.error('Error:', error);
-      alert('❌ Network error occurred');
+      console.error('Submission error:', error);
+      setError('Failed to submit. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleViewSubmissions = async () => {
-    try {
-      const response = await fetch('/api/submissions');
-      const result = await response.json();
-
-      if (response.ok && result.submissions !== undefined) {
-        setSubmissions(result.submissions);
-        setShowSubmissions(true);
-      } else {
-        setError(result.error || 'Failed to load submissions');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      setError('Failed to load submissions');
-    }
-  };
-
-  const handleInputChange = (field: keyof FormData, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  const resetForm = () => {
-    setShowSuccess(false);
-    setShowSubmissions(false);
-    setError(null);
-  };
-
-  // Success View
-  if (showSuccess) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-[#0f1561] via-[#1a2a6b] to-[#0f3460] text-white flex items-center justify-center">
-        <div className="text-center max-w-2xl mx-auto px-4">
-          <div className="bg-gradient-to-br from-[rgba(20,30,60,0.95)] to-[rgba(30,50,100,0.95)] backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-[rgba(255,255,255,0.1)]">
-            <div className="text-6xl mb-6">🎉</div>
-            <h1 className="font-[var(--font-orbitron)] text-4xl font-bold mb-4 bg-gradient-to-r from-[#1e90ff] to-[#00bfff] bg-clip-text text-transparent">
-              Thank You!
-            </h1>
-            <p className="text-xl text-gray-300 mb-8">
-              Your movie favorites have been saved successfully! 🎬
-            </p>
-            <div className="space-y-4">
-              <button
-                onClick={handleViewSubmissions}
-                className="bg-gradient-to-r from-[#1e90ff] to-[#00bfff] hover:from-[#00bfff] hover:to-[#1e90ff] text-white border-none rounded-2xl py-4 px-8 text-lg font-[var(--font-orbitron)] font-bold cursor-pointer transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg w-full"
-              >
-                👥 See Everyone&apos;s Favorites
-              </button>
-              <button
-                onClick={resetForm}
-                className="bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.2)] text-white border border-[rgba(255,255,255,0.3)] rounded-2xl py-4 px-8 text-lg font-[var(--font-orbitron)] cursor-pointer transition-all duration-300 w-full"
-              >
-                ✨ Submit Another Response
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Submissions View
-  if (showSubmissions) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-[#0f1561] via-[#1a2a6b] to-[#0f3460] text-white py-8 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-8">
-            <h1 className="font-[var(--font-orbitron)] text-5xl font-bold tracking-wider mb-4 bg-gradient-to-r from-[#1e90ff] to-[#00bfff] bg-clip-text text-transparent">
-              🎬 All Movie Favorites
-            </h1>
-            <p className="text-xl text-gray-300 mb-6">
-              Discover what everyone loves to watch! ({submissions.length} submissions)
-            </p>
-            <button
-              onClick={resetForm}
-              className="bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.2)] text-white border border-[rgba(255,255,255,0.3)] rounded-2xl py-3 px-6 text-lg font-[var(--font-orbitron)] cursor-pointer transition-all duration-300"
-            >
-              ← Back to Form
-            </button>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {submissions.map((submission) => (
-              <div key={submission.id} className="bg-gradient-to-br from-[rgba(20,30,60,0.95)] to-[rgba(30,50,100,0.95)] backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-[rgba(255,255,255,0.1)] hover:border-[rgba(30,144,255,0.3)] transition-all duration-300">
-                <div className="flex items-center mb-4">
-                  <div className="w-10 h-10 bg-gradient-to-r from-[#1e90ff] to-[#00bfff] rounded-full flex items-center justify-center text-white font-bold mr-3">
-                    👤
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-[#1e90ff]">{submission.name}</h3>
-                    <p className="text-sm text-gray-400">
-                      {new Date(submission.submitted_at).toLocaleDateString()}
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  {[submission.movie1, submission.movie2, submission.movie3, submission.movie4, submission.movie5].map((movie, index) => (
-                    movie && (
-                      <div key={index} className="flex items-center">
-                        <span className="w-6 h-6 bg-[rgba(30,144,255,0.2)] rounded-full flex items-center justify-center text-[#1e90ff] text-xs font-bold mr-3">
-                          {index + 1}
-                        </span>
-                        <span className="text-gray-300">{movie}</span>
-                      </div>
-                    )
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {submissions.length === 0 && (
-            <div className="text-center py-12">
-              <div className="text-6xl mb-4">🎭</div>
-              <h2 className="text-2xl font-bold text-gray-300 mb-2">No submissions yet</h2>
-              <p className="text-gray-400">Be the first to share your favorite movies!</p>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
-
-  // Main Form View
+  // Main Landing Page View
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0f1561] via-[#1a2a6b] to-[#0f3460] text-white">
+      <CustomCursor />
+      
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30px_30px,rgba(255,255,255,0.1)_2px,transparent_0)] bg-[length:60px_60px]"></div>
       </div>
 
-      <div className="relative z-10 flex flex-col items-center justify-start py-8 px-4">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="mb-4">
-            <img 
-              src="/logo.png" 
-              alt="Friendsite Logo" 
-              className="w-full max-w-4xl mx-auto hover:scale-105 transition-transform duration-300"
-            />
-          </div>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed mb-6">
-            Share your top 5 favorite movies and discover what your friends love to watch. 
-            Let&apos;s build the ultimate movie recommendation community! 🎬
-          </p>
-          <a 
-            href="/submissions" 
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen py-8 px-4">
+        {/* Logo */}
+        <div className="mb-12">
+          <Image 
+            src="/logo.png" 
+            alt="Friendsite Logo" 
+            width={800}
+            height={200}
+            className="w-full max-w-4xl mx-auto hover:scale-105 transition-transform duration-300"
+          />
+        </div>
+
+        {/* View Submissions Button */}
+        <div className="w-full max-w-4xl mx-auto mb-8 text-center">
+          <a
+            href="/submissions"
             className="inline-block bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.2)] text-white border border-[rgba(255,255,255,0.3)] rounded-2xl py-3 px-6 text-lg font-[var(--font-orbitron)] cursor-pointer transition-all duration-300"
           >
-            👥 View All Submissions
+            <AnimatedFrog type="default" /> View All Submissions
           </a>
         </div>
-        
-        {/* Error Message */}
-        {error && (
-          <div className="w-full max-w-4xl mx-auto mb-6">
-            <div className="bg-red-500/20 border border-red-500/50 rounded-2xl p-4 text-red-200">
-              <p className="text-center">❌ {error}</p>
-            </div>
+
+        {/* Name Field */}
+        <div className="w-full max-w-4xl mx-auto mb-8">
+          <div className="bg-gradient-to-br from-[rgba(20,30,60,0.95)] to-[rgba(30,50,100,0.95)] backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-[rgba(255,255,255,0.1)]">
+            <label htmlFor="name" className="block text-xl font-bold mb-3 text-[#1e90ff]">
+              <Image
+                src="/alienfrog.png"
+                alt="Alien Frog"
+                width={48}
+                height={48}
+                className="inline-block"
+              /> Identify yourself, Earthling:
+            </label>
+            <input
+              type="text"
+              id="name"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              placeholder="Enter your name (optional)"
+              className="w-full p-4 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-lg placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
+              disabled={isSubmitting}
+            />
+            {error && (
+              <div className="mt-3 text-red-400 text-sm">
+                {error}
+              </div>
+            )}
           </div>
-        )}
-
-        {/* Form Container */}
-        <div className="w-full max-w-4xl mx-auto">
-          <form 
-            onSubmit={handleSubmit}
-            className="bg-gradient-to-br from-[rgba(20,30,60,0.95)] to-[rgba(30,50,100,0.95)] backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-[rgba(255,255,255,0.1)]"
-          >
-            {/* Name Section */}
-            <div className="mb-8">
-              <label htmlFor="name" className="block text-xl font-bold mb-3 text-[#1e90ff]">
-                👤 Your Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                value={formData.name}
-                onChange={(e) => handleInputChange('name', e.target.value)}
-                placeholder="Enter your name"
-                className="w-full p-4 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-lg placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
-                required
-                disabled={isSubmitting}
-              />
-            </div>
-            
-            {/* Movies Sections */}
-            <div className="space-y-8">
-              {[1, 2, 3, 4, 5].map((num) => (
-                <div key={num} className="bg-gradient-to-r from-[rgba(255,255,255,0.05)] to-[rgba(255,255,255,0.02)] rounded-2xl p-6 border border-[rgba(255,255,255,0.1)] hover:border-[rgba(30,144,255,0.3)] transition-all duration-300">
-                  <div className="flex items-center mb-4">
-                    <div className="w-8 h-8 bg-gradient-to-r from-[#1e90ff] to-[#00bfff] rounded-full flex items-center justify-center text-white font-bold text-sm mr-3">
-                      {num}
-                    </div>
-                    <label htmlFor={`movie${num}`} className="text-xl font-bold text-[#1e90ff]">
-                      Movie {num}
-                    </label>
-                  </div>
-                  
-                  <input
-                    type="text"
-                    id={`movie${num}`}
-                    value={formData[`movie${num}` as keyof FormData]}
-                    onChange={(e) => handleInputChange(`movie${num}` as keyof FormData, e.target.value)}
-                    placeholder={`Enter your ${num}${num === 1 ? 'st' : num === 2 ? 'nd' : num === 3 ? 'rd' : 'th'} favorite movie`}
-                    className="w-full p-4 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-lg placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300 mb-4"
-                    disabled={isSubmitting}
-                  />
-                  
-                  <div className="mb-4">
-                    <span className="block text-lg font-semibold mb-3 text-gray-300">
-                      🎭 Genre? (Check all that apply):
-                    </span>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                      {[
-                        'Action/Adventure',
-                        'Comedy',
-                        'Coming of Age',
-                        'Romance',
-                        'Fantasy/Sci Fi',
-                        'Historic/Period',
-                        'Horror/Thriller',
-                        'Mystery',
-                        'Defies the confines of genre'
-                      ].map((genre) => (
-                        <label key={genre} className="flex items-center p-2 rounded-lg bg-[rgba(255,255,255,0.05)] hover:bg-[rgba(30,144,255,0.1)] transition-colors duration-200 cursor-pointer">
-                          <input
-                            type="checkbox"
-                            name={`movie${num}_genre`}
-                            value={genre}
-                            className="mr-3 w-4 h-4 text-[#1e90ff] bg-[rgba(17,34,102,0.8)] border-[rgba(255,255,255,0.3)] rounded focus:ring-[#1e90ff] focus:ring-2"
-                            disabled={isSubmitting}
-                          />
-                          <span className="text-sm">{genre}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label htmlFor={`movie${num}_why`} className="block text-lg font-semibold mb-3 text-gray-300">
-                      💭 Why do you love it?
-                    </label>
-                    <textarea
-                      id={`movie${num}_why`}
-                      name={`movie${num}_why`}
-                      rows={3}
-                      placeholder="Tell us what makes this movie special to you..."
-                      className="w-full p-4 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-lg placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300 resize-y"
-                      disabled={isSubmitting}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            {/* Submit Button */}
-            <div className="mt-10 text-center">
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className={`bg-gradient-to-r from-[#1e90ff] to-[#00bfff] hover:from-[#00bfff] hover:to-[#1e90ff] text-white border-none rounded-2xl py-4 px-12 text-xl font-[var(--font-orbitron)] font-bold cursor-pointer transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
-              >
-                {isSubmitting ? '🚀 Submitting...' : '🚀 Submit My Favorites'}
-              </button>
-              <p className="text-gray-400 mt-4 text-sm">
-                Your submissions will be saved securely and shared with the community
-              </p>
-            </div>
-          </form>
         </div>
 
-        {/* Footer */}
-        <div className="mt-8 text-center text-gray-400">
-          <p className="text-sm">
-            Made with ❤️ for movie lovers everywhere
-          </p>
+        {/* Tabs */}
+        <div className="w-full max-w-4xl mx-auto mb-8">
+          <div className="grid grid-cols-4 gap-4">
+            {[
+              { id: 'movies', label: 'Movies', type: 'movies' },
+              { id: 'shows', label: 'Shows', type: 'shows' },
+              { id: 'music', label: 'Music', type: 'music' },
+              { id: 'books', label: 'Books', type: 'books' },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`p-6 rounded-2xl transition-all duration-300 transform hover:scale-105 ${
+                  activeTab === tab.id
+                    ? 'bg-gradient-to-r from-[#1e90ff] to-[#00bfff] text-white shadow-2xl'
+                    : 'bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.2)] text-white border border-[rgba(255,255,255,0.3)]'
+                }`}
+              >
+                <div className="text-3xl mb-2">
+                  <AnimatedFrog type={tab.type} />
+                </div>
+                <div className="font-[var(--font-orbitron)] font-bold text-lg">{tab.label}</div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Tab Content */}
+        <div className="w-full max-w-4xl mx-auto">
+          {/* Movies Tab */}
+          {activeTab === 'movies' && (
+            <div className="bg-gradient-to-br from-[rgba(20,30,60,0.95)] to-[rgba(30,50,100,0.95)] backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-[rgba(255,255,255,0.1)]">
+              <h2 className="text-3xl font-bold mb-6 text-center text-[#1e90ff]">
+                <AnimatedFrog type="movies" /> Top 5 Movies
+              </h2>
+              <form onSubmit={(e) => handleSubmit(e, 'movies')} className="space-y-6">
+                {[1, 2, 3, 4, 5].map((num) => (
+                  <div key={num} className="space-y-4">
+                    <div>
+                      <label htmlFor={`movie${num}`} className="block text-lg font-semibold mb-2 text-[#1e90ff]">
+                        #{num} Movie
+                      </label>
+                      <input
+                        type="text"
+                        id={`movie${num}`}
+                        name={`movie${num}`}
+                        value={formData[`movie${num}` as keyof FormData] as string}
+                        onChange={(e) => handleInputChange(e, 'movies')}
+                        placeholder={`Enter your #${num} favorite movie`}
+                        className="w-full p-4 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-lg placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-lg font-semibold mb-3 text-[#1e90ff]">
+                        Genres
+                      </label>
+                      <div className="grid grid-cols-3 gap-3">
+                        {["Action/Adventure","Coming of Age","Comedy","Drama","Fantasy / Sci Fi","Horror / Thriller","Mystery","Romance","Defies the confines of genre"].map((genre) => (
+                          <label key={genre} className="flex items-center space-x-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={formData[`genres${num}` as keyof FormData]?.includes(genre) || false}
+                              onChange={(e) => {
+                                const currentGenres = formData[`genres${num}` as keyof FormData] as string[] || [];
+                                if (e.target.checked) {
+                                  setFormData(prev => ({
+                                    ...prev,
+                                    [`genres${num}`]: [...currentGenres, genre]
+                                  }));
+                                } else {
+                                  setFormData(prev => ({
+                                    ...prev,
+                                    [`genres${num}`]: currentGenres.filter(g => g !== genre)
+                                  }));
+                                }
+                              }}
+                              className="w-4 h-4 text-[#1e90ff] bg-[rgba(17,34,102,0.8)] border-[rgba(255,255,255,0.2)] rounded focus:ring-[#1e90ff] focus:ring-2"
+                              disabled={isSubmitting}
+                            />
+                            <span className="text-sm text-white">{genre}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <label htmlFor={`why${num}`} className="block text-md font-semibold mb-2 text-[#1e90ff]">Why do you like this?</label>
+                      <textarea
+                        id={`why${num}`}
+                        name={`why${num}`}
+                        value={formData[`why${num}` as keyof FormData] as string}
+                        onChange={(e) => handleInputChange(e, 'movies')}
+                        placeholder="Share your thoughts..."
+                        className="w-full p-3 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-md placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
+                        rows={3}
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                  </div>
+                ))}
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-gradient-to-r from-[#1e90ff] to-[#00bfff] hover:from-[#00bfff] hover:to-[#1e90ff] text-white font-bold py-4 px-8 rounded-2xl text-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                >
+                  {isSubmitting ? 'Submitting...' : 'Submit Movies'}
+                </button>
+              </form>
+            </div>
+          )}
+
+          {/* Shows Tab */}
+          {activeTab === 'shows' && (
+            <div className="bg-gradient-to-br from-[rgba(20,30,60,0.95)] to-[rgba(30,50,100,0.95)] backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-[rgba(255,255,255,0.1)]">
+              <h2 className="text-3xl font-bold mb-6 text-center text-[#1e90ff]">
+                <AnimatedFrog type="shows" /> Top 5 Shows
+              </h2>
+              <form onSubmit={(e) => handleSubmit(e, 'shows')} className="space-y-6">
+                {[1, 2, 3, 4, 5].map((num) => (
+                  <div key={num} className="space-y-4">
+                    <div>
+                      <label htmlFor={`show${num}`} className="block text-lg font-semibold mb-2 text-[#1e90ff]">
+                        #{num} Show
+                      </label>
+                      <input
+                        type="text"
+                        id={`show${num}`}
+                        name={`show${num}`}
+                        value={showFormData[`show${num}` as keyof ShowFormData] as string}
+                        onChange={(e) => handleInputChange(e, 'shows')}
+                        placeholder={`Enter your #${num} favorite show`}
+                        className="w-full p-4 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-lg placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-lg font-semibold mb-3 text-[#1e90ff]">
+                        Genres
+                      </label>
+                      <div className="grid grid-cols-3 gap-3">
+                        {["Action/Adventure","Coming of Age","Comedy","Drama","Fantasy / Sci Fi","Horror / Thriller","Mystery","Romance","Defies the confines of genre"].map((genre) => (
+                          <label key={genre} className="flex items-center space-x-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={showFormData[`genres${num}` as keyof ShowFormData]?.includes(genre) || false}
+                              onChange={(e) => {
+                                const currentGenres = showFormData[`genres${num}` as keyof ShowFormData] as string[] || [];
+                                if (e.target.checked) {
+                                  setShowFormData(prev => ({
+                                    ...prev,
+                                    [`genres${num}`]: [...currentGenres, genre]
+                                  }));
+                                } else {
+                                  setShowFormData(prev => ({
+                                    ...prev,
+                                    [`genres${num}`]: currentGenres.filter(g => g !== genre)
+                                  }));
+                                }
+                              }}
+                              className="w-4 h-4 text-[#1e90ff] bg-[rgba(17,34,102,0.8)] border-[rgba(255,255,255,0.2)] rounded focus:ring-[#1e90ff] focus:ring-2"
+                              disabled={isSubmitting}
+                            />
+                            <span className="text-sm text-white">{genre}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <label htmlFor={`why${num}`} className="block text-md font-semibold mb-2 text-[#1e90ff]">Why do you like this?</label>
+                      <textarea
+                        id={`why${num}`}
+                        name={`why${num}`}
+                        value={showFormData[`why${num}` as keyof ShowFormData] as string}
+                        onChange={(e) => handleInputChange(e, 'shows')}
+                        placeholder="Share your thoughts..."
+                        className="w-full p-3 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-md placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
+                        rows={3}
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                  </div>
+                ))}
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-gradient-to-r from-[#1e90ff] to-[#00bfff] hover:from-[#00bfff] hover:to-[#1e90ff] text-white font-bold py-4 px-8 rounded-2xl text-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                >
+                  {isSubmitting ? 'Submitting...' : 'Submit Shows'}
+                </button>
+              </form>
+            </div>
+          )}
+
+          {/* Music Tab */}
+          {activeTab === 'music' && (
+            <div className="bg-gradient-to-br from-[rgba(20,30,60,0.95)] to-[rgba(30,50,100,0.95)] backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-[rgba(255,255,255,0.1)]">
+              <h2 className="text-3xl font-bold mb-6 text-center text-[#1e90ff]">
+                <AnimatedFrog type="music" /> Top 5 Music
+              </h2>
+              <form onSubmit={(e) => handleSubmit(e, 'music')} className="space-y-6">
+                {[1, 2, 3, 4, 5].map((num) => (
+                  <div key={num} className="space-y-4">
+                    <div>
+                      <label htmlFor={`music${num}`} className="block text-lg font-semibold mb-2 text-[#1e90ff]">
+                        #{num} Music
+                      </label>
+                      <input
+                        type="text"
+                        id={`music${num}`}
+                        name={`music${num}`}
+                        value={musicFormData[`music${num}` as keyof MusicFormData] as string}
+                        onChange={(e) => handleInputChange(e, 'music')}
+                        placeholder={`Enter your #${num} favorite music`}
+                        className="w-full p-4 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-lg placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor={`why${num}`} className="block text-md font-semibold mb-2 text-[#1e90ff]">Why do you like this?</label>
+                      <textarea
+                        id={`why${num}`}
+                        name={`why${num}`}
+                        value={musicFormData[`why${num}` as keyof MusicFormData] as string}
+                        onChange={(e) => handleInputChange(e, 'music')}
+                        placeholder="Share your thoughts..."
+                        className="w-full p-3 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-md placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
+                        rows={3}
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                  </div>
+                ))}
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-gradient-to-r from-[#1e90ff] to-[#00bfff] hover:from-[#00bfff] hover:to-[#1e90ff] text-white font-bold py-4 px-8 rounded-2xl text-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                >
+                  {isSubmitting ? 'Submitting...' : 'Submit Music'}
+                </button>
+              </form>
+            </div>
+          )}
+
+          {/* Books Tab */}
+          {activeTab === 'books' && (
+            <div className="bg-gradient-to-br from-[rgba(20,30,60,0.95)] to-[rgba(30,50,100,0.95)] backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-[rgba(255,255,255,0.1)]">
+              <h2 className="text-3xl font-bold mb-6 text-center text-[#1e90ff]">
+                <AnimatedFrog type="books" /> Top 5 Books
+              </h2>
+              <form onSubmit={(e) => handleSubmit(e, 'books')} className="space-y-6">
+                {[1, 2, 3, 4, 5].map((num) => (
+                  <div key={num} className="space-y-4">
+                    <div>
+                      <label htmlFor={`book${num}`} className="block text-lg font-semibold mb-2 text-[#1e90ff]">
+                        #{num} Book
+                      </label>
+                      <input
+                        type="text"
+                        id={`book${num}`}
+                        name={`book${num}`}
+                        value={bookFormData[`book${num}` as keyof BookFormData] as string}
+                        onChange={(e) => handleInputChange(e, 'books')}
+                        placeholder={`Enter your #${num} favorite book`}
+                        className="w-full p-4 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-lg placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor={`why${num}`} className="block text-md font-semibold mb-2 text-[#1e90ff]">Why do you like this?</label>
+                      <textarea
+                        id={`why${num}`}
+                        name={`why${num}`}
+                        value={bookFormData[`why${num}` as keyof BookFormData] as string}
+                        onChange={(e) => handleInputChange(e, 'books')}
+                        placeholder="Share your thoughts..."
+                        className="w-full p-3 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-md placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
+                        rows={3}
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                  </div>
+                ))}
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-gradient-to-r from-[#1e90ff] to-[#00bfff] hover:from-[#00bfff] hover:to-[#1e90ff] text-white font-bold py-4 px-8 rounded-2xl text-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                >
+                  {isSubmitting ? 'Submitting...' : 'Submit Books'}
+                </button>
+              </form>
+            </div>
+          )}
         </div>
       </div>
     </div>

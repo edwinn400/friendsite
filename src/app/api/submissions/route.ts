@@ -1,5 +1,46 @@
 import { NextResponse } from 'next/server';
 import { Redis } from '@upstash/redis';
+import { NextRequest } from 'next/server';
+
+// Define the submission type
+interface Submission {
+  id: string;
+  type: "movie" | "show" | "music" | "book" | "art";
+  name: string;
+  movie1?: string;
+  movie2?: string;
+  movie3?: string;
+  movie4?: string;
+  movie5?: string;
+  genres1?: string[];
+  genres2?: string[];
+  genres3?: string[];
+  genres4?: string[];
+  genres5?: string[];
+  why1?: string;
+  why2?: string;
+  why3?: string;
+  why4?: string;
+  why5?: string;
+  show1?: string;
+  show2?: string;
+  show3?: string;
+  show4?: string;
+  show5?: string;
+  music1?: string;
+  music2?: string;
+  music3?: string;
+  music4?: string;
+  music5?: string;
+  book1?: string;
+  book2?: string;
+  book3?: string;
+  book4?: string;
+  book5?: string;
+  artPiece?: string;
+  artFile?: string;
+  submitted_at: string;
+}
 
 // Load local config if available (for development)
 let config: Record<string, string> = {};
@@ -49,27 +90,72 @@ try {
   throw error;
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    // Get all submission IDs from the sorted set
-    const submissionIds = await redis.zrange('submissions', 0, -1, { rev: true });
+    const { searchParams } = new URL(request.url);
+    const type = searchParams.get('type'); // Remove default to allow getting all types
     
-    if (!submissionIds || submissionIds.length === 0) {
-      return NextResponse.json({ submissions: [] });
+    console.log('🔍 Fetching submissions, type filter:', type || 'all');
+    
+    // If a specific type is requested, validate it
+    if (type && type !== 'movie' && type !== 'show' && type !== 'music' && type !== 'book' && type !== 'art') {
+      return NextResponse.json({
+        error: 'Invalid type parameter. Must be "movie", "show", "music", "book", or "art"'
+      }, { status: 400 });
     }
 
-    // Get all submissions
-    const submissions = await Promise.all(
-      submissionIds.map(async (id) => {
-        const submission = await redis.get(`submission:${id}`);
-        return submission;
-      })
-    );
+    let allSubmissions: Submission[] = [];
 
-    // Filter out any null values and return
-    const validSubmissions = submissions.filter(submission => submission !== null);
+    if (type) {
+      // Get submissions of a specific type
+      const submissionIds = await redis.zrange(`${type}_submissions`, 0, -1, { rev: true });
+      console.log(`📋 Found ${submissionIds.length} ${type} submission IDs:`, submissionIds);
+      
+      if (submissionIds && submissionIds.length > 0) {
+        const submissions = await Promise.all(
+          submissionIds.map(async (id) => {
+            const submission = await redis.get(`${type}_submission:${id}`);
+            return submission as Submission | null;
+          })
+        );
+        allSubmissions = submissions.filter((submission): submission is Submission => submission !== null);
+        console.log(`✅ Retrieved ${allSubmissions.length} ${type} submissions`);
+      }
+    } else {
+      // Get all submissions from all types
+      const types = ['movie', 'show', 'music', 'book', 'art'];
+      
+      for (const submissionType of types) {
+        const submissionIds = await redis.zrange(`${submissionType}_submissions`, 0, -1, { rev: true });
+        console.log(`📋 Found ${submissionIds.length} ${submissionType} submission IDs:`, submissionIds);
+        
+        if (submissionIds && submissionIds.length > 0) {
+          const submissions = await Promise.all(
+            submissionIds.map(async (id) => {
+              const submission = await redis.get(`${submissionType}_submission:${id}`);
+              return submission as Submission | null;
+            })
+          );
+          allSubmissions.push(...submissions.filter((submission): submission is Submission => submission !== null));
+          console.log(`✅ Retrieved ${submissions.filter(s => s !== null).length} ${submissionType} submissions`);
+        }
+      }
+      
+      // Sort all submissions by submission date (newest first)
+      allSubmissions.sort((a, b) => new Date(b.submitted_at).getTime() - new Date(a.submitted_at).getTime());
+    }
 
-    return NextResponse.json({ submissions: validSubmissions });
+    console.log(`🎯 Returning ${allSubmissions.length} total submissions`);
+    console.log('📊 Submission types breakdown:', allSubmissions.reduce((acc, sub) => {
+      acc[sub.type] = (acc[sub.type] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>));
+
+    return NextResponse.json({ 
+      submissions: allSubmissions,
+      type: type || 'all',
+      count: allSubmissions.length
+    });
 
   } catch (error) {
     console.error('❌ Error fetching submissions:', error);
