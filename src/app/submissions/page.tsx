@@ -51,7 +51,7 @@ const CustomCursor = () => {
     
     let mouseX = 0, mouseY = 0;
     let cursorX = 0, cursorY = 0;
-    let trailPositions = Array(7).fill(null).map(() => ({ x: 0, y: 0 }));
+    const trailPositions = Array(7).fill(null).map(() => ({ x: 0, y: 0 }));
     let animationId: number;
     
     const updateCursor = () => {
@@ -274,7 +274,7 @@ export default function SubmissionsPage() {
         
         {why && (
           <div className="ml-11">
-            <p className="text-gray-400 text-sm italic">"{why}"</p>
+            <p className="text-gray-400 text-sm italic">&quot;{why}&quot;</p>
           </div>
         )}
       </div>

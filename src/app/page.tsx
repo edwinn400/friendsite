@@ -11,7 +11,7 @@ const CustomCursor = () => {
     
     let mouseX = 0, mouseY = 0;
     let cursorX = 0, cursorY = 0;
-    let trailPositions = Array(7).fill(null).map(() => ({ x: 0, y: 0 }));
+    const trailPositions = Array(7).fill(null).map(() => ({ x: 0, y: 0 }));
     let animationId: number;
     
     const updateCursor = () => {
