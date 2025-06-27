@@ -108,7 +108,7 @@ export default function Home() {
   // Success View
   if (showSuccess) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#0a174e] via-[#1a2a6b] to-[#0f3460] text-white flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-[#0f1561] via-[#1a2a6b] to-[#0f3460] text-white flex items-center justify-center">
         <div className="text-center max-w-2xl mx-auto px-4">
           <div className="bg-gradient-to-br from-[rgba(20,30,60,0.95)] to-[rgba(30,50,100,0.95)] backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-[rgba(255,255,255,0.1)]">
             <div className="text-6xl mb-6">🎉</div>
@@ -141,7 +141,7 @@ export default function Home() {
   // Submissions View
   if (showSubmissions) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#0a174e] via-[#1a2a6b] to-[#0f3460] text-white py-8 px-4">
+      <div className="min-h-screen bg-gradient-to-br from-[#0f1561] via-[#1a2a6b] to-[#0f3460] text-white py-8 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="font-[var(--font-orbitron)] text-5xl font-bold tracking-wider mb-4 bg-gradient-to-r from-[#1e90ff] to-[#00bfff] bg-clip-text text-transparent">
@@ -203,7 +203,7 @@ export default function Home() {
 
   // Main Form View
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a174e] via-[#1a2a6b] to-[#0f3460] text-white">
+    <div className="min-h-screen bg-gradient-to-br from-[#0f1561] via-[#1a2a6b] to-[#0f3460] text-white">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30px_30px,rgba(255,255,255,0.1)_2px,transparent_0)] bg-[length:60px_60px]"></div>
@@ -212,9 +212,13 @@ export default function Home() {
       <div className="relative z-10 flex flex-col items-center justify-start py-8 px-4">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="font-[var(--font-orbitron)] text-6xl font-bold tracking-wider mb-4 bg-gradient-to-r from-[#1e90ff] to-[#00bfff] bg-clip-text text-transparent">
-            FRIENDSITE
-          </h1>
+          <div className="mb-4">
+            <img 
+              src="/logo.png" 
+              alt="Friendsite Logo" 
+              className="w-full max-w-4xl mx-auto hover:scale-105 transition-transform duration-300"
+            />
+          </div>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed mb-6">
             Share your top 5 favorite movies and discover what your friends love to watch. 
             Let&apos;s build the ultimate movie recommendation community! 🎬

@@ -22,6 +22,11 @@ const orbitron = Orbitron({
 export const metadata: Metadata = {
   title: "FRIENDSITE",
   description: "Share your favorite movies with friends",
+  icons: {
+    icon: '/logo.png',
+    shortcut: '/logo.png',
+    apple: '/logo.png',
+  },
 };
 
 export default function RootLayout({
