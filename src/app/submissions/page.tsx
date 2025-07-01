@@ -267,7 +267,7 @@ const AnimatedUFO = () => {
         clearTimeout(timeoutId);
       }
     };
-  }, [hasStarted]);
+  }, [hasStarted, initialSequence, regularSequence]);
 
   const currentSequence = hasStarted ? regularSequence : initialSequence;
   const currentImage = currentSequence[currentUFO];

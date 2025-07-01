@@ -488,7 +488,7 @@ export default function Home() {
         <div className="w-full max-w-4xl mx-auto mb-6 text-center">
           <div className="bg-gradient-to-br from-[rgba(255,100,100,0.1)] to-[rgba(255,50,50,0.1)] backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-[rgba(255,100,100,0.3)]">
             <p className="text-white text-lg font-[var(--font-orbitron)] leading-relaxed">
-              Halt, human! This is an abduction. Please keep your arms and legs within the beam. We are collecting data to prepare for our imminent invasion of Earth. But, uh... our brainwave scanner isn't working right now. Can you fill out this form instead?
+              Halt, human! This is an abduction. Please keep your arms and legs within the beam. We are collecting data to prepare for our imminent invasion of Earth. But, uh... our brainwave scanner isn&apos;t working right now. Can you fill out this form instead?
             </p>
           </div>
         </div>
