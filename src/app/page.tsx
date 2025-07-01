@@ -167,6 +167,8 @@ const AnimatedFrog = ({ type = 'default' }: { type?: string }) => {
   );
 };
 
+
+
 interface FormData {
   name: string;
   movie1: string;
@@ -212,6 +214,11 @@ interface MusicFormData {
   music3: string;
   music4: string;
   music5: string;
+  artist1: string;
+  artist2: string;
+  artist3: string;
+  artist4: string;
+  artist5: string;
   why1: string;
   why2: string;
   why3: string;
@@ -278,6 +285,11 @@ export default function Home() {
     music3: "",
     music4: "",
     music5: "",
+    artist1: "",
+    artist2: "",
+    artist3: "",
+    artist4: "",
+    artist5: "",
     why1: "",
     why2: "",
     why3: "",
@@ -413,6 +425,11 @@ export default function Home() {
           music3: "",
           music4: "",
           music5: "",
+          artist1: "",
+          artist2: "",
+          artist3: "",
+          artist4: "",
+          artist5: "",
           why1: "",
           why2: "",
           why3: "",
@@ -467,13 +484,28 @@ export default function Home() {
           />
         </div>
 
+        {/* Abduction Message */}
+        <div className="w-full max-w-4xl mx-auto mb-6 text-center">
+          <div className="bg-gradient-to-br from-[rgba(255,100,100,0.1)] to-[rgba(255,50,50,0.1)] backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-[rgba(255,100,100,0.3)]">
+            <p className="text-white text-lg font-[var(--font-orbitron)] leading-relaxed">
+              Halt, human! This is an abduction. Please keep your arms and legs within the beam. We are collecting data to prepare for our imminent invasion of Earth. But, uh... our brainwave scanner isn't working right now. Can you fill out this form instead?
+            </p>
+          </div>
+        </div>
+
         {/* View Submissions Button */}
         <div className="w-full max-w-4xl mx-auto mb-8 text-center">
           <a
             href="/submissions"
             className="inline-block bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.2)] text-white border border-[rgba(255,255,255,0.3)] rounded-2xl py-3 px-6 text-lg font-[var(--font-orbitron)] cursor-pointer transition-all duration-300"
           >
-            <AnimatedFrog type="default" /> View All Submissions
+            <Image
+              src="/car.png"
+              alt="Car"
+              width={80}
+              height={80}
+              className="inline-block"
+            /> View Aggregate Human Data
           </a>
         </div>
 
@@ -512,7 +544,7 @@ export default function Home() {
             {[
               { id: 'movies', label: 'Movies', type: 'movies' },
               { id: 'shows', label: 'Shows', type: 'shows' },
-              { id: 'music', label: 'Music', type: 'music' },
+              { id: 'music', label: 'Songs', type: 'music' },
               { id: 'books', label: 'Books', type: 'books' },
             ].map((tab) => (
               <button
@@ -592,13 +624,13 @@ export default function Home() {
                       </div>
                     </div>
                     <div>
-                      <label htmlFor={`why${num}`} className="block text-md font-semibold mb-2 text-[#1e90ff]">Why do you like this?</label>
+                      <label htmlFor={`why${num}`} className="block text-md font-semibold mb-2 text-[#1e90ff]">Why do you like it?</label>
                       <textarea
                         id={`why${num}`}
                         name={`why${num}`}
                         value={formData[`why${num}` as keyof FormData] as string}
                         onChange={(e) => handleInputChange(e, 'movies')}
-                        placeholder="Share your thoughts..."
+                        placeholder="Reveal your brainwave data..."
                         className="w-full p-3 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-md placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
                         rows={3}
                         disabled={isSubmitting}
@@ -674,13 +706,13 @@ export default function Home() {
                       </div>
                     </div>
                     <div>
-                      <label htmlFor={`why${num}`} className="block text-md font-semibold mb-2 text-[#1e90ff]">Why do you like this?</label>
+                      <label htmlFor={`why${num}`} className="block text-md font-semibold mb-2 text-[#1e90ff]">Why do you like it?</label>
                       <textarea
                         id={`why${num}`}
                         name={`why${num}`}
                         value={showFormData[`why${num}` as keyof ShowFormData] as string}
                         onChange={(e) => handleInputChange(e, 'shows')}
-                        placeholder="Share your thoughts..."
+                        placeholder="Reveal your brainwave data..."
                         className="w-full p-3 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-md placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
                         rows={3}
                         disabled={isSubmitting}
@@ -703,14 +735,14 @@ export default function Home() {
           {activeTab === 'music' && (
             <div className="bg-gradient-to-br from-[rgba(20,30,60,0.95)] to-[rgba(30,50,100,0.95)] backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-[rgba(255,255,255,0.1)]">
               <h2 className="text-3xl font-bold mb-6 text-center text-[#1e90ff]">
-                <AnimatedFrog type="music" /> Top 5 Music
+                <AnimatedFrog type="music" /> Top 5 Songs
               </h2>
               <form onSubmit={(e) => handleSubmit(e, 'music')} className="space-y-6">
                 {[1, 2, 3, 4, 5].map((num) => (
                   <div key={num} className="space-y-4">
                     <div>
                       <label htmlFor={`music${num}`} className="block text-lg font-semibold mb-2 text-[#1e90ff]">
-                        #{num} Music
+                        #{num} Song
                       </label>
                       <input
                         type="text"
@@ -718,19 +750,34 @@ export default function Home() {
                         name={`music${num}`}
                         value={musicFormData[`music${num}` as keyof MusicFormData] as string}
                         onChange={(e) => handleInputChange(e, 'music')}
-                        placeholder={`Enter your #${num} favorite music`}
+                        placeholder={`Enter your #${num} favorite song`}
                         className="w-full p-4 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-lg placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
                         disabled={isSubmitting}
                       />
                     </div>
                     <div>
-                      <label htmlFor={`why${num}`} className="block text-md font-semibold mb-2 text-[#1e90ff]">Why do you like this?</label>
+                      <label htmlFor={`artist${num}`} className="block text-lg font-semibold mb-2 text-[#1e90ff]">
+                        Artist
+                      </label>
+                      <input
+                        type="text"
+                        id={`artist${num}`}
+                        name={`artist${num}`}
+                        value={musicFormData[`artist${num}` as keyof MusicFormData] as string}
+                        onChange={(e) => handleInputChange(e, 'music')}
+                        placeholder={`Enter the artist for your #${num} song`}
+                        className="w-full p-4 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-lg placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor={`why${num}`} className="block text-md font-semibold mb-2 text-[#1e90ff]">Why do you like it?</label>
                       <textarea
                         id={`why${num}`}
                         name={`why${num}`}
                         value={musicFormData[`why${num}` as keyof MusicFormData] as string}
                         onChange={(e) => handleInputChange(e, 'music')}
-                        placeholder="Share your thoughts..."
+                        placeholder="Reveal your brainwave data..."
                         className="w-full p-3 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-md placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
                         rows={3}
                         disabled={isSubmitting}
@@ -743,7 +790,7 @@ export default function Home() {
                   disabled={isSubmitting}
                   className="w-full bg-gradient-to-r from-[#1e90ff] to-[#00bfff] hover:from-[#00bfff] hover:to-[#1e90ff] text-white font-bold py-4 px-8 rounded-2xl text-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 >
-                  {isSubmitting ? 'Submitting...' : 'Submit Music'}
+                  {isSubmitting ? 'Submitting...' : 'Submit Songs'}
                 </button>
               </form>
             </div>
@@ -774,13 +821,13 @@ export default function Home() {
                       />
                     </div>
                     <div>
-                      <label htmlFor={`why${num}`} className="block text-md font-semibold mb-2 text-[#1e90ff]">Why do you like this?</label>
+                      <label htmlFor={`why${num}`} className="block text-md font-semibold mb-2 text-[#1e90ff]">Why do you like it?</label>
                       <textarea
                         id={`why${num}`}
                         name={`why${num}`}
                         value={bookFormData[`why${num}` as keyof BookFormData] as string}
                         onChange={(e) => handleInputChange(e, 'books')}
-                        placeholder="Share your thoughts..."
+                        placeholder="Reveal your brainwave data..."
                         className="w-full p-3 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-md placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
                         rows={3}
                         disabled={isSubmitting}

@@ -46,3 +46,4 @@ config.local.js
 
 # Database management scripts
 clear-redis.js
+clear-submissions.js

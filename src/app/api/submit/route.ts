@@ -117,6 +117,11 @@ export async function POST(request: NextRequest) {
         music3: answers.music3 || '',
         music4: answers.music4 || '',
         music5: answers.music5 || '',
+        artist1: answers.artist1 || '',
+        artist2: answers.artist2 || '',
+        artist3: answers.artist3 || '',
+        artist4: answers.artist4 || '',
+        artist5: answers.artist5 || '',
         why1: answers.why1 || '',
         why2: answers.why2 || '',
         why3: answers.why3 || '',
@@ -154,7 +159,7 @@ export async function POST(request: NextRequest) {
     const typeNames = {
       movie: 'Movie',
       show: 'TV Show',
-      music: 'Music',
+              music: 'Songs',
       book: 'Book',
       art: 'Art Piece'
     };

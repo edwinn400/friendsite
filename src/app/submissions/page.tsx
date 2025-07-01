@@ -33,6 +33,11 @@ interface Submission {
   music3?: string;
   music4?: string;
   music5?: string;
+  artist1?: string;
+  artist2?: string;
+  artist3?: string;
+  artist4?: string;
+  artist5?: string;
   book1?: string;
   book2?: string;
   book3?: string;
@@ -213,6 +218,71 @@ const AnimatedFrog = ({ type = 'default' }: { type?: string }) => {
   );
 };
 
+// Animated UFO Component
+const AnimatedUFO = () => {
+  const [currentUFO, setCurrentUFO] = useState(0);
+  const [hasStarted, setHasStarted] = useState(false);
+  
+  // Initial sequence (only plays once on page load)
+  const initialSequence = [
+    { src: '/ufothreeblink.png', duration: 2000 } // 2 seconds
+  ];
+  
+  // Regular animation sequence (plays after initial sequence)
+  const regularSequence = [
+    { src: '/ufo.png', duration: 3000 },           // 3 seconds
+    { src: '/ufooneblink.png', duration: 1000 },   // 1 second
+    { src: '/ufo.png', duration: 3000 },           // 3 seconds (added between oneblink and twoblink)
+    { src: '/ufotwoblink.png', duration: 1000 },   // 1 second
+    { src: '/ufo.png', duration: 3000 }            // 3 seconds
+  ];
+
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    let currentIndex = 0;
+    
+    const cycleUFO = () => {
+      if (!hasStarted) {
+        // Play initial sequence
+        setCurrentUFO(0);
+        timeoutId = setTimeout(() => {
+          setHasStarted(true);
+          currentIndex = 0;
+          cycleUFO();
+        }, initialSequence[0].duration);
+      } else {
+        // Play regular sequence
+        setCurrentUFO(currentIndex);
+        timeoutId = setTimeout(() => {
+          currentIndex = (currentIndex + 1) % regularSequence.length;
+          cycleUFO();
+        }, regularSequence[currentIndex].duration);
+      }
+    };
+    
+    cycleUFO();
+    
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [hasStarted]);
+
+  const currentSequence = hasStarted ? regularSequence : initialSequence;
+  const currentImage = currentSequence[currentUFO];
+
+  return (
+    <Image 
+      src={currentImage.src}
+      alt="Animated UFO Logo" 
+      width={800}
+      height={200}
+      className="w-full max-w-4xl mx-auto hover:scale-105 transition-transform duration-300"
+    />
+  );
+};
+
 export default function SubmissionsPage() {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [loading, setLoading] = useState(true);
@@ -315,13 +385,108 @@ export default function SubmissionsPage() {
         return (
           <div className="space-y-3">
             <h4 className="text-lg font-semibold text-gray-300 mb-4">
-              <AnimatedFrog type="music" /> Top 5 Music:
+                              <AnimatedFrog type="music" /> Top 5 Songs:
             </h4>
-            {renderEntry(submission.music1, 0, undefined, submission.why1)}
-            {renderEntry(submission.music2, 1, undefined, submission.why2)}
-            {renderEntry(submission.music3, 2, undefined, submission.why3)}
-            {renderEntry(submission.music4, 3, undefined, submission.why4)}
-            {renderEntry(submission.music5, 4, undefined, submission.why5)}
+            {submission.music1 && (
+              <div className="mb-4 p-4 bg-[rgba(255,255,255,0.05)] rounded-xl">
+                <div className="flex items-center mb-2">
+                  <span className="w-8 h-8 bg-gradient-to-r from-[#1e90ff] to-[#00bfff] rounded-full flex items-center justify-center text-white text-sm font-bold mr-3">
+                    1
+                  </span>
+                  <div>
+                    <span className="text-gray-200 font-medium text-lg">{submission.music1}</span>
+                    {submission.artist1 && (
+                      <div className="text-[#1e90ff] text-sm">by {submission.artist1}</div>
+                    )}
+                  </div>
+                </div>
+                {submission.why1 && (
+                  <div className="ml-11">
+                    <p className="text-gray-400 text-sm italic">&quot;{submission.why1}&quot;</p>
+                  </div>
+                )}
+              </div>
+            )}
+            {submission.music2 && (
+              <div className="mb-4 p-4 bg-[rgba(255,255,255,0.05)] rounded-xl">
+                <div className="flex items-center mb-2">
+                  <span className="w-8 h-8 bg-gradient-to-r from-[#1e90ff] to-[#00bfff] rounded-full flex items-center justify-center text-white text-sm font-bold mr-3">
+                    2
+                  </span>
+                  <div>
+                    <span className="text-gray-200 font-medium text-lg">{submission.music2}</span>
+                    {submission.artist2 && (
+                      <div className="text-[#1e90ff] text-sm">by {submission.artist2}</div>
+                    )}
+                  </div>
+                </div>
+                {submission.why2 && (
+                  <div className="ml-11">
+                    <p className="text-gray-400 text-sm italic">&quot;{submission.why2}&quot;</p>
+                  </div>
+                )}
+              </div>
+            )}
+            {submission.music3 && (
+              <div className="mb-4 p-4 bg-[rgba(255,255,255,0.05)] rounded-xl">
+                <div className="flex items-center mb-2">
+                  <span className="w-8 h-8 bg-gradient-to-r from-[#1e90ff] to-[#00bfff] rounded-full flex items-center justify-center text-white text-sm font-bold mr-3">
+                    3
+                  </span>
+                  <div>
+                    <span className="text-gray-200 font-medium text-lg">{submission.music3}</span>
+                    {submission.artist3 && (
+                      <div className="text-[#1e90ff] text-sm">by {submission.artist3}</div>
+                    )}
+                  </div>
+                </div>
+                {submission.why3 && (
+                  <div className="ml-11">
+                    <p className="text-gray-400 text-sm italic">&quot;{submission.why3}&quot;</p>
+                  </div>
+                )}
+              </div>
+            )}
+            {submission.music4 && (
+              <div className="mb-4 p-4 bg-[rgba(255,255,255,0.05)] rounded-xl">
+                <div className="flex items-center mb-2">
+                  <span className="w-8 h-8 bg-gradient-to-r from-[#1e90ff] to-[#00bfff] rounded-full flex items-center justify-center text-white text-sm font-bold mr-3">
+                    4
+                  </span>
+                  <div>
+                    <span className="text-gray-200 font-medium text-lg">{submission.music4}</span>
+                    {submission.artist4 && (
+                      <div className="text-[#1e90ff] text-sm">by {submission.artist4}</div>
+                    )}
+                  </div>
+                </div>
+                {submission.why4 && (
+                  <div className="ml-11">
+                    <p className="text-gray-400 text-sm italic">&quot;{submission.why4}&quot;</p>
+                  </div>
+                )}
+              </div>
+            )}
+            {submission.music5 && (
+              <div className="mb-4 p-4 bg-[rgba(255,255,255,0.05)] rounded-xl">
+                <div className="flex items-center mb-2">
+                  <span className="w-8 h-8 bg-gradient-to-r from-[#1e90ff] to-[#00bfff] rounded-full flex items-center justify-center text-white text-sm font-bold mr-3">
+                    5
+                  </span>
+                  <div>
+                    <span className="text-gray-200 font-medium text-lg">{submission.music5}</span>
+                    {submission.artist5 && (
+                      <div className="text-[#1e90ff] text-sm">by {submission.artist5}</div>
+                    )}
+                  </div>
+                </div>
+                {submission.why5 && (
+                  <div className="ml-11">
+                    <p className="text-gray-400 text-sm italic">&quot;{submission.why5}&quot;</p>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         );
       
@@ -371,7 +536,7 @@ export default function SubmissionsPage() {
     switch (type) {
       case 'movie': return 'Movies';
       case 'show': return 'Shows';
-      case 'music': return 'Music';
+      case 'music': return 'Songs';
       case 'book': return 'Books';
       case 'art': return 'Art';
       default: return 'Unknown';
@@ -432,13 +597,7 @@ export default function SubmissionsPage() {
       <div className="relative z-10 max-w-7xl mx-auto">
         {/* Logo */}
         <div className="mb-12">
-          <Image 
-            src="/ufo.png" 
-            alt="Friendsite Logo" 
-            width={800}
-            height={200}
-            className="w-full max-w-4xl mx-auto hover:scale-105 transition-transform duration-300"
-          />
+          <AnimatedUFO />
         </div>
 
         {/* Header */}
