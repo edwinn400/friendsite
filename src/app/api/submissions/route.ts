@@ -107,8 +107,8 @@ export async function GET(request: NextRequest) {
     let allSubmissions: Submission[] = [];
 
     if (type) {
-      // Get submissions of a specific type
-      const submissionIds = await redis.zrange(`${type}_submissions`, 0, -1, { rev: true });
+      // Get submissions of a specific type in alphabetical order
+      const submissionIds = await redis.zrange(`${type}_submissions`, 0, -1);
       console.log(`📋 Found ${submissionIds.length} ${type} submission IDs:`, submissionIds);
       
       if (submissionIds && submissionIds.length > 0) {
@@ -119,14 +119,14 @@ export async function GET(request: NextRequest) {
           })
         );
         allSubmissions = submissions.filter((submission): submission is Submission => submission !== null);
-        console.log(`✅ Retrieved ${allSubmissions.length} ${type} submissions`);
+        console.log(`✅ Retrieved ${allSubmissions.length} ${type} submissions in alphabetical order`);
       }
     } else {
-      // Get all submissions from all types
+      // Get all submissions from all types in alphabetical order
       const types = ['movie', 'show', 'music', 'book', 'art'];
       
       for (const submissionType of types) {
-        const submissionIds = await redis.zrange(`${submissionType}_submissions`, 0, -1, { rev: true });
+        const submissionIds = await redis.zrange(`${submissionType}_submissions`, 0, -1);
         console.log(`📋 Found ${submissionIds.length} ${submissionType} submission IDs:`, submissionIds);
         
         if (submissionIds && submissionIds.length > 0) {
@@ -137,12 +137,33 @@ export async function GET(request: NextRequest) {
             })
           );
           allSubmissions.push(...submissions.filter((submission): submission is Submission => submission !== null));
-          console.log(`✅ Retrieved ${submissions.filter(s => s !== null).length} ${submissionType} submissions`);
+          console.log(`✅ Retrieved ${submissions.filter(s => s !== null).length} ${submissionType} submissions in alphabetical order`);
         }
       }
       
-      // Sort all submissions by submission date (newest first)
-      allSubmissions.sort((a, b) => new Date(b.submitted_at).getTime() - new Date(a.submitted_at).getTime());
+      // Sort all submissions alphabetically by name (A-Z, then 0-9, then special characters)
+      allSubmissions.sort((a, b) => {
+        const aFirst = a.name.charAt(0).toLowerCase();
+        const bFirst = b.name.charAt(0).toLowerCase();
+        
+        // Letters come first (a-z)
+        const aIsLetter = aFirst >= 'a' && aFirst <= 'z';
+        const bIsLetter = bFirst >= 'a' && bFirst <= 'z';
+        
+        // Numbers come second (0-9)
+        const aIsNumber = aFirst >= '0' && aFirst <= '9';
+        const bIsNumber = bFirst >= '0' && bFirst <= '9';
+        
+        // Special characters come last
+        
+        if (aIsLetter && !bIsLetter) return -1;
+        if (!aIsLetter && bIsLetter) return 1;
+        if (aIsNumber && !bIsNumber && !bIsLetter) return -1;
+        if (!aIsNumber && !aIsLetter && bIsNumber) return 1;
+        
+        // Within same category, sort alphabetically
+        return aFirst.localeCompare(bFirst);
+      });
     }
 
     console.log(`🎯 Returning ${allSubmissions.length} total submissions`);

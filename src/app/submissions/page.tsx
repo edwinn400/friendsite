@@ -225,16 +225,16 @@ const AnimatedUFO = () => {
   
   // Initial sequence (only plays once on page load)
   const initialSequence = [
-    { src: '/ufothreeblink.png', duration: 2000 } // 2 seconds
+    { src: '/ufothreeblink.png', duration: 3000 } // 3 seconds
   ];
   
   // Regular animation sequence (plays after initial sequence)
   const regularSequence = [
-    { src: '/ufo.png', duration: 3000 },           // 3 seconds
+    { src: '/ufo.png', duration: 2000 },           // 2 seconds
     { src: '/ufooneblink.png', duration: 1000 },   // 1 second
-    { src: '/ufo.png', duration: 3000 },           // 3 seconds (added between oneblink and twoblink)
+    { src: '/ufo.png', duration: 2000 },           // 2 seconds
     { src: '/ufotwoblink.png', duration: 1000 },   // 1 second
-    { src: '/ufo.png', duration: 3000 }            // 3 seconds
+    { src: '/ufo.png', duration: 2000 }            // 2 seconds
   ];
 
   useEffect(() => {
@@ -243,7 +243,7 @@ const AnimatedUFO = () => {
     
     const cycleUFO = () => {
       if (!hasStarted) {
-        // Play initial sequence
+        // Play initial sequence (ufothreeblink.png for 3 seconds)
         setCurrentUFO(0);
         timeoutId = setTimeout(() => {
           setHasStarted(true);
@@ -267,7 +267,7 @@ const AnimatedUFO = () => {
         clearTimeout(timeoutId);
       }
     };
-  }, [hasStarted, initialSequence, regularSequence]);
+  }, [hasStarted]);
 
   const currentSequence = hasStarted ? regularSequence : initialSequence;
   const currentImage = currentSequence[currentUFO];
@@ -287,6 +287,7 @@ export default function SubmissionsPage() {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'movie' | 'show' | 'music' | 'book'>('movie');
 
   useEffect(() => {
     fetchSubmissions();
@@ -543,6 +544,10 @@ export default function SubmissionsPage() {
     }
   };
 
+  const filteredSubmissions = submissions.filter(submission => {
+    return submission.type === activeTab;
+  });
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#0a174e] via-[#1a2a6b] to-[#0f3460] text-white flex items-center justify-center">
@@ -606,7 +611,7 @@ export default function SubmissionsPage() {
             Human Data Collected
           </h1>
           <p className="text-xl text-gray-300 mb-6">
-            Discover what everyone loves! ({submissions?.length || 0} submissions)
+            Discover what everyone loves! ({filteredSubmissions?.length || 0} submissions)
           </p>
           <Link href="/">
             <button className="bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.2)] text-white border border-[rgba(255,255,255,0.3)] rounded-2xl py-3 px-6 text-lg font-[var(--font-orbitron)] cursor-pointer transition-all duration-300">
@@ -615,18 +620,68 @@ export default function SubmissionsPage() {
           </Link>
         </div>
 
+        {/* Tabs */}
+        <div className="mb-8">
+          <div className="flex flex-wrap justify-center gap-2">
+            <button
+              onClick={() => setActiveTab('movie')}
+              className={`px-6 py-3 rounded-2xl font-[var(--font-orbitron)] text-lg font-bold transition-all duration-300 ${
+                activeTab === 'movie'
+                  ? 'bg-gradient-to-r from-[#1e90ff] to-[#00bfff] text-white shadow-lg'
+                  : 'bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.2)] text-gray-300 border border-[rgba(255,255,255,0.3)]'
+              }`}
+            >
+              <AnimatedFrog type="movies" /> Movies ({submissions.filter(s => s.type === 'movie').length})
+            </button>
+            <button
+              onClick={() => setActiveTab('show')}
+              className={`px-6 py-3 rounded-2xl font-[var(--font-orbitron)] text-lg font-bold transition-all duration-300 ${
+                activeTab === 'show'
+                  ? 'bg-gradient-to-r from-[#1e90ff] to-[#00bfff] text-white shadow-lg'
+                  : 'bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.2)] text-gray-300 border border-[rgba(255,255,255,0.3)]'
+              }`}
+            >
+              <AnimatedFrog type="shows" /> Shows ({submissions.filter(s => s.type === 'show').length})
+            </button>
+            <button
+              onClick={() => setActiveTab('music')}
+              className={`px-6 py-3 rounded-2xl font-[var(--font-orbitron)] text-lg font-bold transition-all duration-300 ${
+                activeTab === 'music'
+                  ? 'bg-gradient-to-r from-[#1e90ff] to-[#00bfff] text-white shadow-lg'
+                  : 'bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.2)] text-gray-300 border border-[rgba(255,255,255,0.3)]'
+              }`}
+            >
+              <AnimatedFrog type="music" /> Songs ({submissions.filter(s => s.type === 'music').length})
+            </button>
+            <button
+              onClick={() => setActiveTab('book')}
+              className={`px-6 py-3 rounded-2xl font-[var(--font-orbitron)] text-lg font-bold transition-all duration-300 ${
+                activeTab === 'book'
+                  ? 'bg-gradient-to-r from-[#1e90ff] to-[#00bfff] text-white shadow-lg'
+                  : 'bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.2)] text-gray-300 border border-[rgba(255,255,255,0.3)]'
+              }`}
+            >
+              <AnimatedFrog type="books" /> Books ({submissions.filter(s => s.type === 'book').length})
+            </button>
+          </div>
+        </div>
+
         {/* Submissions Grid */}
         {(() => {
           try {
-            if (!submissions || !Array.isArray(submissions) || submissions.length === 0) {
+            if (!filteredSubmissions || !Array.isArray(filteredSubmissions) || filteredSubmissions.length === 0) {
               return (
                 <div className="text-center py-16">
                   <div className="bg-gradient-to-br from-[rgba(20,30,60,0.95)] to-[rgba(30,50,100,0.95)] backdrop-blur-sm rounded-3xl p-12 shadow-2xl border border-[rgba(255,255,255,0.1)] max-w-2xl mx-auto">
                     <div className="text-8xl mb-6">
-                      <AnimatedFrog type="movies" />
+                      <AnimatedFrog type={activeTab === 'music' ? 'music' : activeTab + 's'} />
                     </div>
-                    <h2 className="text-3xl font-bold text-gray-300 mb-4">No submissions yet</h2>
-                    <p className="text-gray-400 mb-8 text-lg">Be the first to share your favorites and inspire others!</p>
+                    <h2 className="text-3xl font-bold text-gray-300 mb-4">
+                      {`No ${getTypeLabel(activeTab).toLowerCase()} submissions yet`}
+                    </h2>
+                    <p className="text-gray-400 mb-8 text-lg">
+                      {`Be the first to share your favorite ${getTypeLabel(activeTab).toLowerCase()}!`}
+                    </p>
                     <Link href="/">
                       <button className="bg-gradient-to-r from-[#1e90ff] to-[#00bfff] hover:from-[#00bfff] hover:to-[#1e90ff] text-white border-none rounded-2xl py-4 px-8 text-xl font-[var(--font-orbitron)] font-bold cursor-pointer transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg">
                         <AnimatedFrog type="default" /> Be the First!
@@ -639,7 +694,7 @@ export default function SubmissionsPage() {
 
             return (
               <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                {submissions.map((submission, index) => {
+                {filteredSubmissions.map((submission, index) => {
                   try {
                     if (!submission || !submission.id) {
                       console.warn('Invalid submission at index:', index, submission);
@@ -650,9 +705,6 @@ export default function SubmissionsPage() {
                       <div key={submission.id} className="bg-gradient-to-br from-[rgba(20,30,60,0.95)] to-[rgba(30,50,100,0.95)] backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-[rgba(255,255,255,0.1)] hover:border-[rgba(30,144,255,0.3)] transition-all duration-300 transform hover:scale-105">
                         {/* User Header */}
                         <div className="flex items-center mb-6">
-                          <div className="w-12 h-12 bg-gradient-to-r from-[#1e90ff] to-[#00bfff] rounded-full flex items-center justify-center text-white font-bold text-lg mr-4">
-                            <AnimatedFrog type="default" />
-                          </div>
                           <div className="flex-1">
                             <h3 className="text-2xl font-bold text-[#1e90ff]">{submission.name || 'Anonymous'}</h3>
                             <div className="flex items-center mt-1">

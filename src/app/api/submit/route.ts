@@ -149,12 +149,31 @@ export async function POST(request: NextRequest) {
 
     console.log(`📝 Attempting to save ${submissionType} submission:`, submission.id);
 
+    // Generate alphabetical sort score based on first character of name
+    const firstChar = submission.name.charAt(0).toLowerCase();
+    let sortScore: number;
+    
+    if (firstChar >= 'a' && firstChar <= 'z') {
+      // Letters: a=1, b=2, ..., z=26
+      sortScore = firstChar.charCodeAt(0) - 96;
+    } else if (firstChar >= '0' && firstChar <= '9') {
+      // Numbers: 0=27, 1=28, ..., 9=36
+      sortScore = parseInt(firstChar) + 27;
+    } else {
+      // Special characters: 37+
+      sortScore = 37;
+    }
+    
+    // Add timestamp as decimal to maintain order within same first character
+    const timestamp = Date.now();
+    const finalScore = sortScore + (timestamp / 1000000000000); // Small decimal to maintain order
+
     // Store in Upstash Redis with type-specific keys
     await redis.set(`${submissionType}_submission:${submission.id}`, submission);
     console.log(`✅ ${submissionType} submission saved to Redis`);
     
-    await redis.zadd(`${submissionType}_submissions`, { score: Date.now(), member: submission.id });
-    console.log(`✅ ${submissionType} submission ID added to sorted set`);
+    await redis.zadd(`${submissionType}_submissions`, { score: finalScore, member: submission.id });
+    console.log(`✅ ${submissionType} submission ID added to sorted set with alphabetical score: ${sortScore}`);
 
     const typeNames = {
       movie: 'Movie',
