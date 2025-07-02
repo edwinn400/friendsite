@@ -1,12 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Redis } from '@upstash/redis';
 
-// Load config
-const config = require('../../../../config.local.js');
+// Load local config if available (for development)
+let config: Record<string, string> = {};
+try {
+  if (process.env.NODE_ENV === 'development') {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    config = require('../../../../config.js');
+    console.log('✅ Loaded local config.js');
+  }
+} catch {
+  console.log('⚠️  Local config.js not found, using environment variables');
+}
+
+const redisUrl = config.UPSTASH_REDIS_REST_URL || process.env.UPSTASH_REDIS_REST_URL;
+const redisToken = config.UPSTASH_REDIS_REST_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
 
 const redis = new Redis({
-  url: config.UPSTASH_REDIS_REST_URL,
-  token: config.UPSTASH_REDIS_REST_TOKEN,
+  url: redisUrl!,
+  token: redisToken!,
 });
 
 export async function PUT(request: NextRequest) {
