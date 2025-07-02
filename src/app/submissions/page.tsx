@@ -739,6 +739,10 @@ export default function SubmissionsPage() {
               <AnimatedFrog type="default" /> Submit Your Favorites
             </button>
           </Link>
+          {/* Spotify Playlist Embed */}
+          <div className="flex justify-center mt-8">
+            <iframe style={{ borderRadius: '12px' }} src="https://open.spotify.com/embed/playlist/4tAELeoj4PHuT9SO5ZQaFD?utm_source=generator" width="100%" height="352" frameBorder="0" allowFullScreen={true} allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+          </div>
         </div>
 
         {/* Tabs */}
