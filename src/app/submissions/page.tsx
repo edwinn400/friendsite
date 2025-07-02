@@ -43,6 +43,11 @@ interface Submission {
   book3?: string;
   book4?: string;
   book5?: string;
+  author1?: string;
+  author2?: string;
+  author3?: string;
+  author4?: string;
+  author5?: string;
   artPiece?: string;
   artFile?: string;
   submitted_at: string;
@@ -497,11 +502,106 @@ export default function SubmissionsPage() {
             <h4 className="text-lg font-semibold text-gray-300 mb-4">
               <AnimatedFrog type="books" /> Top 5 Books:
             </h4>
-            {renderEntry(submission.book1, 0, submission.genres1, submission.why1)}
-            {renderEntry(submission.book2, 1, submission.genres2, submission.why2)}
-            {renderEntry(submission.book3, 2, submission.genres3, submission.why3)}
-            {renderEntry(submission.book4, 3, submission.genres4, submission.why4)}
-            {renderEntry(submission.book5, 4, submission.genres5, submission.why5)}
+            {submission.book1 && (
+              <div className="mb-4 p-4 bg-[rgba(255,255,255,0.05)] rounded-xl">
+                <div className="flex items-center mb-2">
+                  <span className="w-8 h-8 bg-gradient-to-r from-[#1e90ff] to-[#00bfff] rounded-full flex items-center justify-center text-white text-sm font-bold mr-3">
+                    1
+                  </span>
+                  <div>
+                    <span className="text-gray-200 font-medium text-lg">{submission.book1}</span>
+                    {submission.author1 && (
+                      <div className="text-gray-400 text-sm">by {submission.author1}</div>
+                    )}
+                  </div>
+                </div>
+                {submission.why1 && (
+                  <div className="ml-11">
+                    <p className="text-gray-400 text-sm italic">&quot;{submission.why1}&quot;</p>
+                  </div>
+                )}
+              </div>
+            )}
+            {submission.book2 && (
+              <div className="mb-4 p-4 bg-[rgba(255,255,255,0.05)] rounded-xl">
+                <div className="flex items-center mb-2">
+                  <span className="w-8 h-8 bg-gradient-to-r from-[#1e90ff] to-[#00bfff] rounded-full flex items-center justify-center text-white text-sm font-bold mr-3">
+                    2
+                  </span>
+                  <div>
+                    <span className="text-gray-200 font-medium text-lg">{submission.book2}</span>
+                    {submission.author2 && (
+                      <div className="text-gray-400 text-sm">by {submission.author2}</div>
+                    )}
+                  </div>
+                </div>
+                {submission.why2 && (
+                  <div className="ml-11">
+                    <p className="text-gray-400 text-sm italic">&quot;{submission.why2}&quot;</p>
+                  </div>
+                )}
+              </div>
+            )}
+            {submission.book3 && (
+              <div className="mb-4 p-4 bg-[rgba(255,255,255,0.05)] rounded-xl">
+                <div className="flex items-center mb-2">
+                  <span className="w-8 h-8 bg-gradient-to-r from-[#1e90ff] to-[#00bfff] rounded-full flex items-center justify-center text-white text-sm font-bold mr-3">
+                    3
+                  </span>
+                  <div>
+                    <span className="text-gray-200 font-medium text-lg">{submission.book3}</span>
+                    {submission.author3 && (
+                      <div className="text-gray-400 text-sm">by {submission.author3}</div>
+                    )}
+                  </div>
+                </div>
+                {submission.why3 && (
+                  <div className="ml-11">
+                    <p className="text-gray-400 text-sm italic">&quot;{submission.why3}&quot;</p>
+                  </div>
+                )}
+              </div>
+            )}
+            {submission.book4 && (
+              <div className="mb-4 p-4 bg-[rgba(255,255,255,0.05)] rounded-xl">
+                <div className="flex items-center mb-2">
+                  <span className="w-8 h-8 bg-gradient-to-r from-[#1e90ff] to-[#00bfff] rounded-full flex items-center justify-center text-white text-sm font-bold mr-3">
+                    4
+                  </span>
+                  <div>
+                    <span className="text-gray-200 font-medium text-lg">{submission.book4}</span>
+                    {submission.author4 && (
+                      <div className="text-gray-400 text-sm">by {submission.author4}</div>
+                    )}
+                  </div>
+                </div>
+                {submission.why4 && (
+                  <div className="ml-11">
+                    <p className="text-gray-400 text-sm italic">&quot;{submission.why4}&quot;</p>
+                  </div>
+                )}
+              </div>
+            )}
+            {submission.book5 && (
+              <div className="mb-4 p-4 bg-[rgba(255,255,255,0.05)] rounded-xl">
+                <div className="flex items-center mb-2">
+                  <span className="w-8 h-8 bg-gradient-to-r from-[#1e90ff] to-[#00bfff] rounded-full flex items-center justify-center text-white text-sm font-bold mr-3">
+                    5
+                  </span>
+                  <div>
+                    <span className="text-gray-200 font-medium text-lg">{submission.book5}</span>
+                    {submission.author5 && (
+                      <div className="text-gray-400 text-sm">by {submission.author5}</div>
+                    )}
+                  </div>
+                </div>
+                {submission.why5 && (
+                  <div className="ml-11">
+                    <p className="text-gray-400 text-sm italic">&quot;{submission.why5}&quot;</p>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         );
       

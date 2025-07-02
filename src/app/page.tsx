@@ -233,6 +233,11 @@ interface BookFormData {
   book3: string;
   book4: string;
   book5: string;
+  author1: string;
+  author2: string;
+  author3: string;
+  author4: string;
+  author5: string;
   why1: string;
   why2: string;
   why3: string;
@@ -303,6 +308,11 @@ export default function Home() {
     book3: "",
     book4: "",
     book5: "",
+    author1: "",
+    author2: "",
+    author3: "",
+    author4: "",
+    author5: "",
     why1: "",
     why2: "",
     why3: "",
@@ -443,6 +453,11 @@ export default function Home() {
           book3: "",
           book4: "",
           book5: "",
+          author1: "",
+          author2: "",
+          author3: "",
+          author4: "",
+          author5: "",
           why1: "",
           why2: "",
           why3: "",
@@ -816,6 +831,21 @@ export default function Home() {
                         value={bookFormData[`book${num}` as keyof BookFormData] as string}
                         onChange={(e) => handleInputChange(e, 'books')}
                         placeholder={`Enter your #${num} favorite book`}
+                        className="w-full p-4 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-lg placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor={`author${num}`} className="block text-lg font-semibold mb-2 text-[#1e90ff]">
+                        Author
+                      </label>
+                      <input
+                        type="text"
+                        id={`author${num}`}
+                        name={`author${num}`}
+                        value={bookFormData[`author${num}` as keyof BookFormData] as string}
+                        onChange={(e) => handleInputChange(e, 'books')}
+                        placeholder={`Enter the author for your #${num} book`}
                         className="w-full p-4 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-lg placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
                         disabled={isSubmitting}
                       />
