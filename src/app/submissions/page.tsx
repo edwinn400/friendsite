@@ -752,7 +752,7 @@ export default function SubmissionsPage() {
           <div className="flex flex-wrap justify-center gap-2">
             <button
               onClick={() => setActiveTab('movie')}
-              className={`px-6 py-3 rounded-2xl font-[var(--font-orbitron)] text-lg font-bold transition-all duration-300 ${
+              className={`px-3 sm:px-6 py-2 sm:py-3 rounded-2xl font-[var(--font-orbitron)] text-sm sm:text-lg font-bold transition-all duration-300 whitespace-nowrap ${
                 activeTab === 'movie'
                   ? 'bg-gradient-to-r from-[#1e90ff] to-[#00bfff] text-white shadow-lg'
                   : 'bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.2)] text-gray-300 border border-[rgba(255,255,255,0.3)]'
@@ -762,7 +762,7 @@ export default function SubmissionsPage() {
             </button>
             <button
               onClick={() => setActiveTab('show')}
-              className={`px-6 py-3 rounded-2xl font-[var(--font-orbitron)] text-lg font-bold transition-all duration-300 ${
+              className={`px-3 sm:px-6 py-2 sm:py-3 rounded-2xl font-[var(--font-orbitron)] text-sm sm:text-lg font-bold transition-all duration-300 whitespace-nowrap ${
                 activeTab === 'show'
                   ? 'bg-gradient-to-r from-[#1e90ff] to-[#00bfff] text-white shadow-lg'
                   : 'bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.2)] text-gray-300 border border-[rgba(255,255,255,0.3)]'
@@ -772,7 +772,7 @@ export default function SubmissionsPage() {
             </button>
             <button
               onClick={() => setActiveTab('music')}
-              className={`px-6 py-3 rounded-2xl font-[var(--font-orbitron)] text-lg font-bold transition-all duration-300 ${
+              className={`px-3 sm:px-6 py-2 sm:py-3 rounded-2xl font-[var(--font-orbitron)] text-sm sm:text-lg font-bold transition-all duration-300 whitespace-nowrap ${
                 activeTab === 'music'
                   ? 'bg-gradient-to-r from-[#1e90ff] to-[#00bfff] text-white shadow-lg'
                   : 'bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.2)] text-gray-300 border border-[rgba(255,255,255,0.3)]'
@@ -782,7 +782,7 @@ export default function SubmissionsPage() {
             </button>
             <button
               onClick={() => setActiveTab('book')}
-              className={`px-6 py-3 rounded-2xl font-[var(--font-orbitron)] text-lg font-bold transition-all duration-300 ${
+              className={`px-3 sm:px-6 py-2 sm:py-3 rounded-2xl font-[var(--font-orbitron)] text-sm sm:text-lg font-bold transition-all duration-300 whitespace-nowrap ${
                 activeTab === 'book'
                   ? 'bg-gradient-to-r from-[#1e90ff] to-[#00bfff] text-white shadow-lg'
                   : 'bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.2)] text-gray-300 border border-[rgba(255,255,255,0.3)]'
