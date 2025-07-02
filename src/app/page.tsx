@@ -610,9 +610,9 @@ export default function Home() {
                       <label className="block text-lg font-semibold mb-3 text-[#1e90ff]">
                         Genres
                       </label>
-                      <div className="grid grid-cols-3 gap-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                         {["Action/Adventure","Coming of Age","Comedy","Drama","Fantasy / Sci Fi","Horror / Thriller","Mystery","Romance","Defies the confines of genre"].map((genre) => (
-                          <label key={genre} className="flex items-center space-x-2 cursor-pointer">
+                          <label key={genre} className="flex items-start space-x-2 cursor-pointer p-2 rounded-lg hover:bg-[rgba(255,255,255,0.05)] transition-colors">
                             <input
                               type="checkbox"
                               checked={formData[`genres${num}` as keyof FormData]?.includes(genre) || false}
@@ -630,10 +630,10 @@ export default function Home() {
                                   }));
                                 }
                               }}
-                              className="w-4 h-4 text-[#1e90ff] bg-[rgba(17,34,102,0.8)] border-[rgba(255,255,255,0.2)] rounded focus:ring-[#1e90ff] focus:ring-2"
+                              className="w-4 h-4 mt-0.5 text-[#1e90ff] bg-[rgba(17,34,102,0.8)] border-[rgba(255,255,255,0.2)] rounded focus:ring-[#1e90ff] focus:ring-2 flex-shrink-0"
                               disabled={isSubmitting}
                             />
-                            <span className="text-sm text-white">{genre}</span>
+                            <span className="text-sm text-white leading-relaxed break-words">{genre}</span>
                           </label>
                         ))}
                       </div>
@@ -692,9 +692,9 @@ export default function Home() {
                       <label className="block text-lg font-semibold mb-3 text-[#1e90ff]">
                         Genres
                       </label>
-                      <div className="grid grid-cols-3 gap-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                         {["Action/Adventure","Coming of Age","Comedy","Drama","Fantasy / Sci Fi","Horror / Thriller","Mystery","Romance","Defies the confines of genre"].map((genre) => (
-                          <label key={genre} className="flex items-center space-x-2 cursor-pointer">
+                          <label key={genre} className="flex items-start space-x-2 cursor-pointer p-2 rounded-lg hover:bg-[rgba(255,255,255,0.05)] transition-colors">
                             <input
                               type="checkbox"
                               checked={showFormData[`genres${num}` as keyof ShowFormData]?.includes(genre) || false}
@@ -712,10 +712,10 @@ export default function Home() {
                                   }));
                                 }
                               }}
-                              className="w-4 h-4 text-[#1e90ff] bg-[rgba(17,34,102,0.8)] border-[rgba(255,255,255,0.2)] rounded focus:ring-[#1e90ff] focus:ring-2"
+                              className="w-4 h-4 mt-0.5 text-[#1e90ff] bg-[rgba(17,34,102,0.8)] border-[rgba(255,255,255,0.2)] rounded focus:ring-[#1e90ff] focus:ring-2 flex-shrink-0"
                               disabled={isSubmitting}
                             />
-                            <span className="text-sm text-white">{genre}</span>
+                            <span className="text-sm text-white leading-relaxed break-words">{genre}</span>
                           </label>
                         ))}
                       </div>
