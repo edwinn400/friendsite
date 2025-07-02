@@ -5,7 +5,25 @@ import Image from "next/image";
 
 // Custom Cursor Component - Efficient Version
 const CustomCursor = () => {
+  const [isDesktop, setIsDesktop] = useState(false);
+
   useEffect(() => {
+    // Check if device supports hover (desktop) vs touch
+    const checkDevice = () => {
+      const hasHover = window.matchMedia('(hover: hover)').matches;
+      const hasPointer = window.matchMedia('(pointer: fine)').matches;
+      setIsDesktop(hasHover && hasPointer);
+    };
+
+    checkDevice();
+    window.addEventListener('resize', checkDevice);
+    
+    return () => window.removeEventListener('resize', checkDevice);
+  }, []);
+
+  useEffect(() => {
+    if (!isDesktop) return; // Don't initialize cursor on mobile/touch devices
+
     const cursor = document.getElementById('custom-cursor');
     const trails = Array.from({ length: 7 }, (_, i) => document.getElementById(`trail-${i + 1}`));
     
@@ -66,7 +84,10 @@ const CustomCursor = () => {
       document.removeEventListener('mouseleave', handleMouseLeave);
       document.removeEventListener('mouseenter', handleMouseEnter);
     };
-  }, []);
+  }, [isDesktop]);
+
+  // Don't render cursor elements on mobile/touch devices
+  if (!isDesktop) return null;
 
   return (
     <>
