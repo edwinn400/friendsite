@@ -563,29 +563,60 @@ export default function Home() {
         </div>
 
         {/* Tabs */}
-        <div className="w-full max-w-4xl mx-auto mb-8">
-          <div className="grid grid-cols-4 gap-4">
-            {[
-              { id: 'movies', label: 'Movies', type: 'movies' },
-              { id: 'shows', label: 'Shows', type: 'shows' },
-              { id: 'music', label: 'Songs', type: 'music' },
-              { id: 'books', label: 'Books', type: 'books' },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`p-6 rounded-2xl transition-all duration-300 transform hover:scale-105 ${
-                  activeTab === tab.id
-                    ? 'bg-gradient-to-r from-[#1e90ff] to-[#00bfff] text-white shadow-2xl'
-                    : 'bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.2)] text-white border border-[rgba(255,255,255,0.3)]'
-                }`}
-              >
-                <div className="text-3xl mb-2">
-                  <AnimatedFrog type={tab.type} />
-                </div>
-                <div className="font-[var(--font-orbitron)] font-bold tracking-tighter text-lg sm:text-xs md:text-lg">{tab.label}</div>
-              </button>
-            ))}
+        <div className="max-w-2xl mx-auto pb-8">
+          <div className="flex w-full justify-center gap-2">
+            <button
+              onClick={() => setActiveTab('movies')}
+              className={`flex flex-col items-center justify-center px-3 sm:px-6 py-2 sm:py-3 rounded-2xl font-[var(--font-orbitron)] transition-all duration-300 w-1/4 ${
+                activeTab === 'movies'
+                  ? 'bg-gradient-to-r from-[#1e90ff] to-[#00bfff] text-white shadow-lg'
+                  : 'bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.2)] text-white border border-[rgba(255,255,255,0.3)]'
+              }`}
+            >
+              <span className="text-3xl mb-0.5"><AnimatedFrog type="movies" /></span>
+              <span className="font-[var(--font-orbitron)] font-bold tracking-tighter text-lg sm:text-xs md:text-lg text-center w-full text-ellipsis">
+                Movies
+              </span>
+            </button>
+            <button
+              onClick={() => setActiveTab('shows')}
+              className={`flex flex-col items-center justify-center gap-1 px-3 sm:px-6 py-2 sm:py-3 rounded-2xl font-[var(--font-orbitron)] transition-all duration-300 w-1/4  ${
+                activeTab === 'shows'
+                  ? 'bg-gradient-to-r from-[#1e90ff] to-[#00bfff] text-white shadow-lg'
+                  : 'bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.2)] text-white border border-[rgba(255,255,255,0.3)]'
+              }`}
+            >
+              <span className="text-3xl mb-0.5"><AnimatedFrog type="shows" /></span>
+              <span className="font-[var(--font-orbitron)] font-bold tracking-tighter text-lg sm:text-xs md:text-lg text-center w-full  text-ellipsis">
+                Shows
+              </span>
+            </button>
+            <button
+              onClick={() => setActiveTab('music')}
+              className={`flex flex-col items-center justify-center gap-1 px-3 sm:px-6 py-2 sm:py-3 rounded-2xl font-[var(--font-orbitron)] transition-all duration-300 w-1/4 ${
+                activeTab === 'music'
+                  ? 'bg-gradient-to-r from-[#1e90ff] to-[#00bfff] text-white shadow-lg'
+                  : 'bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.2)] text-white border border-[rgba(255,255,255,0.3)]'
+              }`}
+            >
+              <span className="text-3xl mb-0.5"><AnimatedFrog type="music" /></span>
+              <span className="font-[var(--font-orbitron)] font-bold tracking-tighter text-lg sm:text-xs md:text-lg text-center w-full  text-ellipsis">
+                Songs
+              </span>
+            </button>
+            <button
+              onClick={() => setActiveTab('books')}
+              className={`flex flex-col items-center justify-center gap-1 px-3 sm:px-6 py-2 sm:py-3 rounded-2xl font-[var(--font-orbitron)] transition-all duration-300 w-1/4  ${
+                activeTab === 'books'
+                  ? 'bg-gradient-to-r from-[#1e90ff] to-[#00bfff] text-white shadow-lg'
+                  : 'bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.2)] text-white border border-[rgba(255,255,255,0.3)]'
+              }`}
+            >
+              <span className="text-3xl mb-0.5"><AnimatedFrog type="books" /></span>
+              <span className="font-[var(--font-orbitron)] font-bold tracking-tighter text-lg sm:text-xs md:text-lg text-center w-full  text-ellipsis">
+                Books
+              </span>
+            </button>
           </div>
         </div>
 

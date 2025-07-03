@@ -748,51 +748,59 @@ export default function SubmissionsPage() {
         </div>
 
         {/* Tabs */}
-        <div className="mb-8">
-          <div className="flex flex-wrap justify-center gap-2">
+        <div className="max-w-2xl mx-auto">
+          <div className="flex w-full justify-center gap-2">
             <button
               onClick={() => setActiveTab('movie')}
-              className={`flex items-center justify-center gap-2 px-3 sm:px-6 py-2 sm:py-3 rounded-2xl font-[var(--font-orbitron)] text-xs sm:text-base font-bold transition-all duration-300 min-w-[90px] max-w-[120px] sm:min-w-[110px] sm:max-w-[150px] h-[48px] sm:h-[56px] overflow-hidden ${
+              className={`flex flex-col items-center justify-center px-3 sm:px-6 py-2 sm:py-3 rounded-2xl font-[var(--font-orbitron)] transition-all duration-300 w-1/4 ${
                 activeTab === 'movie'
                   ? 'bg-gradient-to-r from-[#1e90ff] to-[#00bfff] text-white shadow-lg'
                   : 'bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.2)] text-gray-300 border border-[rgba(255,255,255,0.3)]'
               }`}
             >
-              <AnimatedFrog type="movies" />
-              <span className="block w-full text-center whitespace-nowrap overflow-hidden text-ellipsis">Movies ({submissions.filter(s => s.type === 'movie').length})</span>
+              <span className="text-3xl mb-0.5"><AnimatedFrog type="movies" /></span>
+              <span className="font-[var(--font-orbitron)] font-bold tracking-tighter text-lg sm:text-xs md:text-lg text-center w-full text-ellipsis">
+                Movies ({submissions.filter(s => s.type === 'movie').length})
+              </span>
             </button>
             <button
               onClick={() => setActiveTab('show')}
-              className={`flex items-center justify-center gap-2 px-3 sm:px-6 py-2 sm:py-3 rounded-2xl font-[var(--font-orbitron)] text-xs sm:text-base font-bold transition-all duration-300 min-w-[90px] max-w-[120px] sm:min-w-[110px] sm:max-w-[150px] h-[48px] sm:h-[56px] overflow-hidden ${
+              className={`flex flex-col items-center justify-center gap-1 px-3 sm:px-6 py-2 sm:py-3 rounded-2xl font-[var(--font-orbitron)] transition-all duration-300 w-1/4  ${
                 activeTab === 'show'
                   ? 'bg-gradient-to-r from-[#1e90ff] to-[#00bfff] text-white shadow-lg'
                   : 'bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.2)] text-gray-300 border border-[rgba(255,255,255,0.3)]'
               }`}
             >
-              <AnimatedFrog type="shows" />
-              <span className="block w-full text-center whitespace-nowrap overflow-hidden text-ellipsis">Shows ({submissions.filter(s => s.type === 'show').length})</span>
+              <span className="text-3xl mb-0.5"><AnimatedFrog type="shows" /></span>
+              <span className="font-[var(--font-orbitron)] font-bold tracking-tighter text-lg sm:text-xs md:text-lg text-center w-full  text-ellipsis">
+                Shows ({submissions.filter(s => s.type === 'show').length})
+              </span>
             </button>
             <button
               onClick={() => setActiveTab('music')}
-              className={`flex items-center justify-center gap-2 px-3 sm:px-6 py-2 sm:py-3 rounded-2xl font-[var(--font-orbitron)] text-xs sm:text-base font-bold transition-all duration-300 min-w-[90px] max-w-[120px] sm:min-w-[110px] sm:max-w-[150px] h-[48px] sm:h-[56px] overflow-hidden ${
+              className={`flex flex-col items-center justify-center gap-1 px-3 sm:px-6 py-2 sm:py-3 rounded-2xl font-[var(--font-orbitron)] transition-all duration-300 w-1/4 ${
                 activeTab === 'music'
                   ? 'bg-gradient-to-r from-[#1e90ff] to-[#00bfff] text-white shadow-lg'
                   : 'bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.2)] text-gray-300 border border-[rgba(255,255,255,0.3)]'
               }`}
             >
-              <AnimatedFrog type="music" />
-              <span className="block w-full text-center whitespace-nowrap overflow-hidden text-ellipsis">Songs ({submissions.filter(s => s.type === 'music').length})</span>
+              <span className="text-3xl mb-0.5"><AnimatedFrog type="music" /></span>
+              <span className="font-[var(--font-orbitron)] font-bold tracking-tighter text-lg sm:text-xs md:text-lg text-center w-full  text-ellipsis">
+                Songs ({submissions.filter(s => s.type === 'music').length})
+              </span>
             </button>
             <button
               onClick={() => setActiveTab('book')}
-              className={`flex items-center justify-center gap-2 px-3 sm:px-6 py-2 sm:py-3 rounded-2xl font-[var(--font-orbitron)] text-xs sm:text-base font-bold transition-all duration-300 min-w-[90px] max-w-[120px] sm:min-w-[110px] sm:max-w-[150px] h-[48px] sm:h-[56px] overflow-hidden ${
+              className={`flex flex-col items-center justify-center gap-1 px-3 sm:px-6 py-2 sm:py-3 rounded-2xl font-[var(--font-orbitron)] transition-all duration-300 w-1/4  ${
                 activeTab === 'book'
                   ? 'bg-gradient-to-r from-[#1e90ff] to-[#00bfff] text-white shadow-lg'
                   : 'bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.2)] text-gray-300 border border-[rgba(255,255,255,0.3)]'
               }`}
             >
-              <AnimatedFrog type="books" />
-              <span className="block w-full text-center whitespace-nowrap overflow-hidden text-ellipsis">Books ({submissions.filter(s => s.type === 'book').length})</span>
+              <span className="text-3xl mb-0.5"><AnimatedFrog type="books" /></span>
+              <span className="font-[var(--font-orbitron)] font-bold tracking-tighter text-lg sm:text-xs md:text-lg text-center w-full  text-ellipsis">
+                Books ({submissions.filter(s => s.type === 'book').length})
+              </span>
             </button>
           </div>
         </div>
