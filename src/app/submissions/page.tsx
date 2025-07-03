@@ -752,43 +752,47 @@ export default function SubmissionsPage() {
           <div className="flex flex-wrap justify-center gap-2">
             <button
               onClick={() => setActiveTab('movie')}
-              className={`px-3 sm:px-6 py-2 sm:py-3 rounded-2xl font-[var(--font-orbitron)] text-sm sm:text-lg font-bold transition-all duration-300 whitespace-nowrap text-center flex items-center justify-center ${
+              className={`px-2 sm:px-6 py-2 sm:py-3 rounded-2xl font-[var(--font-orbitron)] text-xs sm:text-lg font-bold transition-all duration-300 break-words text-center flex flex-col items-center justify-center ${
                 activeTab === 'movie'
                   ? 'bg-gradient-to-r from-[#1e90ff] to-[#00bfff] text-white shadow-lg'
                   : 'bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.2)] text-gray-300 border border-[rgba(255,255,255,0.3)]'
               }`}
             >
-              <AnimatedFrog type="movies" /> Movies ({submissions.filter(s => s.type === 'movie').length})
+              <span className="flex items-center justify-center w-full"> <AnimatedFrog type="movies" /> </span>
+              <span className="block w-full">Movies ({submissions.filter(s => s.type === 'movie').length})</span>
             </button>
             <button
               onClick={() => setActiveTab('show')}
-              className={`px-3 sm:px-6 py-2 sm:py-3 rounded-2xl font-[var(--font-orbitron)] text-sm sm:text-lg font-bold transition-all duration-300 whitespace-nowrap text-center flex items-center justify-center ${
+              className={`px-2 sm:px-6 py-2 sm:py-3 rounded-2xl font-[var(--font-orbitron)] text-xs sm:text-lg font-bold transition-all duration-300 break-words text-center flex flex-col items-center justify-center ${
                 activeTab === 'show'
                   ? 'bg-gradient-to-r from-[#1e90ff] to-[#00bfff] text-white shadow-lg'
                   : 'bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.2)] text-gray-300 border border-[rgba(255,255,255,0.3)]'
               }`}
             >
-              <AnimatedFrog type="shows" /> Shows ({submissions.filter(s => s.type === 'show').length})
+              <span className="flex items-center justify-center w-full"> <AnimatedFrog type="shows" /> </span>
+              <span className="block w-full">Shows ({submissions.filter(s => s.type === 'show').length})</span>
             </button>
             <button
               onClick={() => setActiveTab('music')}
-              className={`px-3 sm:px-6 py-2 sm:py-3 rounded-2xl font-[var(--font-orbitron)] text-sm sm:text-lg font-bold transition-all duration-300 whitespace-nowrap text-center flex items-center justify-center ${
+              className={`px-2 sm:px-6 py-2 sm:py-3 rounded-2xl font-[var(--font-orbitron)] text-xs sm:text-lg font-bold transition-all duration-300 break-words text-center flex flex-col items-center justify-center ${
                 activeTab === 'music'
                   ? 'bg-gradient-to-r from-[#1e90ff] to-[#00bfff] text-white shadow-lg'
                   : 'bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.2)] text-gray-300 border border-[rgba(255,255,255,0.3)]'
               }`}
             >
-              <AnimatedFrog type="music" /> Songs ({submissions.filter(s => s.type === 'music').length})
+              <span className="flex items-center justify-center w-full"> <AnimatedFrog type="music" /> </span>
+              <span className="block w-full">Songs ({submissions.filter(s => s.type === 'music').length})</span>
             </button>
             <button
               onClick={() => setActiveTab('book')}
-              className={`px-3 sm:px-6 py-2 sm:py-3 rounded-2xl font-[var(--font-orbitron)] text-sm sm:text-lg font-bold transition-all duration-300 whitespace-nowrap text-center flex items-center justify-center ${
+              className={`px-2 sm:px-6 py-2 sm:py-3 rounded-2xl font-[var(--font-orbitron)] text-xs sm:text-lg font-bold transition-all duration-300 break-words text-center flex flex-col items-center justify-center ${
                 activeTab === 'book'
                   ? 'bg-gradient-to-r from-[#1e90ff] to-[#00bfff] text-white shadow-lg'
                   : 'bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.2)] text-gray-300 border border-[rgba(255,255,255,0.3)]'
               }`}
             >
-              <AnimatedFrog type="books" /> Books ({submissions.filter(s => s.type === 'book').length})
+              <span className="flex items-center justify-center w-full"> <AnimatedFrog type="books" /> </span>
+              <span className="block w-full">Books ({submissions.filter(s => s.type === 'book').length})</span>
             </button>
           </div>
         </div>
