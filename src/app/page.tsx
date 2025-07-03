@@ -364,6 +364,18 @@ export default function Home() {
   // Handle form submissions
   const handleSubmit = async (e: React.FormEvent, type: string) => {
     e.preventDefault();
+    // Require name
+    let name = '';
+    switch (type) {
+      case 'movies': name = formData.name; break;
+      case 'shows': name = showFormData.name; break;
+      case 'music': name = musicFormData.name; break;
+      case 'books': name = bookFormData.name; break;
+    }
+    if (!name || name.trim() === '') {
+      alert('Please enter your name.');
+      return;
+    }
     
     try {
       let submissionData;
@@ -556,8 +568,9 @@ export default function Home() {
               id="name"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              placeholder="Enter your name (optional)"
+              placeholder="Enter your name"
               className="w-full p-4 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-lg placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
+              required
             />
           </div>
         </div>
