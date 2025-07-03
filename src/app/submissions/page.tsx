@@ -846,24 +846,26 @@ export default function SubmissionsPage() {
                         <div className="flex items-center mb-6">
                           <div className="flex-1">
                             <h3 className="text-2xl font-bold text-[#1e90ff]">{submission.name || 'Anonymous'}</h3>
-                            <div className="flex items-center mt-1">
-                              <span className="text-2xl mr-2">{getTypeIcon(submission.type || 'unknown')}</span>
-                              <span className="text-sm text-gray-400">{getTypeLabel(submission.type || 'unknown')}</span>
-                            </div>
-                            <p className="text-sm text-gray-400 mt-1">
-                              {submission.submitted_at ? new Date(submission.submitted_at).toLocaleDateString('en-US', {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit'
-                              }) : 'Unknown date'}
-                            </p>
                           </div>
                         </div>
-                        
-                        {/* Content */}
-                        {renderSubmissionContent(submission)}
+                        {/* Content (no frogs, no type label, no date, no 'Top 5 ...') */}
+                        {(() => {
+                          // Render only the entries for the submission type, without heading or frog
+                          switch (submission.type) {
+                            case 'movie':
+                              return <>{renderEntry(submission.movie1, 0, submission.genres1, submission.why1)}{renderEntry(submission.movie2, 1, submission.genres2, submission.why2)}{renderEntry(submission.movie3, 2, submission.genres3, submission.why3)}{renderEntry(submission.movie4, 3, submission.genres4, submission.why4)}{renderEntry(submission.movie5, 4, submission.genres5, submission.why5)}</>;
+                            case 'show':
+                              return <>{renderEntry(submission.show1, 0, submission.genres1, submission.why1)}{renderEntry(submission.show2, 1, submission.genres2, submission.why2)}{renderEntry(submission.show3, 2, submission.genres3, submission.why3)}{renderEntry(submission.show4, 3, submission.genres4, submission.why4)}{renderEntry(submission.show5, 4, submission.genres5, submission.why5)}</>;
+                            case 'music':
+                              return <>{renderSubmissionContent({ ...submission, type: 'music' }).props.children.slice(1)}</>;
+                            case 'book':
+                              return <>{renderSubmissionContent({ ...submission, type: 'book' }).props.children.slice(1)}</>;
+                            case 'art':
+                              return <>{renderSubmissionContent({ ...submission, type: 'art' }).props.children.slice(1)}</>;
+                            default:
+                              return null;
+                          }
+                        })()}
                       </div>
                     );
                   } catch (submissionError) {
