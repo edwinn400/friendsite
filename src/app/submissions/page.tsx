@@ -350,7 +350,7 @@ export default function SubmissionsPage() {
     
     return (
       <div key={index} className="mb-4 p-4 bg-[rgba(255,255,255,0.05)] rounded-xl">
-        <div className="flex items-center mb-2">
+        <div className="flex items-center mb-4">
           <span className="w-8 h-8 bg-gradient-to-r from-[#1e90ff] to-[#00bfff] rounded-full flex items-center justify-center text-white text-sm font-bold mr-3">
             {index + 1}
           </span>
@@ -532,7 +532,7 @@ export default function SubmissionsPage() {
                   <div>
                     <span className="text-gray-200 font-medium text-lg">{submission.book1}</span>
                     {submission.author1 && (
-                      <div className="text-gray-400 text-sm">by {submission.author1}</div>
+                      <div className="text-[#1e90ff] text-sm">by {submission.author1}</div>
                     )}
                   </div>
                 </div>
@@ -552,7 +552,7 @@ export default function SubmissionsPage() {
                   <div>
                     <span className="text-gray-200 font-medium text-lg">{submission.book2}</span>
                     {submission.author2 && (
-                      <div className="text-gray-400 text-sm">by {submission.author2}</div>
+                      <div className="text-[#1e90ff] text-sm">by {submission.author2}</div>
                     )}
                   </div>
                 </div>
@@ -572,7 +572,7 @@ export default function SubmissionsPage() {
                   <div>
                     <span className="text-gray-200 font-medium text-lg">{submission.book3}</span>
                     {submission.author3 && (
-                      <div className="text-gray-400 text-sm">by {submission.author3}</div>
+                      <div className="text-[#1e90ff] text-sm">by {submission.author3}</div>
                     )}
                   </div>
                 </div>
@@ -592,7 +592,7 @@ export default function SubmissionsPage() {
                   <div>
                     <span className="text-gray-200 font-medium text-lg">{submission.book4}</span>
                     {submission.author4 && (
-                      <div className="text-gray-400 text-sm">by {submission.author4}</div>
+                      <div className="text-[#1e90ff] text-sm">by {submission.author4}</div>
                     )}
                   </div>
                 </div>
@@ -612,7 +612,7 @@ export default function SubmissionsPage() {
                   <div>
                     <span className="text-gray-200 font-medium text-lg">{submission.book5}</span>
                     {submission.author5 && (
-                      <div className="text-gray-400 text-sm">by {submission.author5}</div>
+                      <div className="text-[#1e90ff] text-sm">by {submission.author5}</div>
                     )}
                   </div>
                 </div>
