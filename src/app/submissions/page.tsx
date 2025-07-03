@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -250,18 +250,18 @@ const AnimatedUFO = () => {
   const [hasStarted, setHasStarted] = useState(false);
   
   // Initial sequence (only plays once on page load)
-  const initialSequence = [
+  const initialSequence = useMemo(() => [
     { src: '/ufothreeblink.png', duration: 3000 } // 3 seconds
-  ];
+  ], []);
   
   // Regular animation sequence (plays after initial sequence)
-  const regularSequence = [
+  const regularSequence = useMemo(() => [
     { src: '/ufo.png', duration: 2000 },           // 2 seconds
     { src: '/ufooneblink.png', duration: 1000 },   // 1 second
     { src: '/ufo.png', duration: 2000 },           // 2 seconds
     { src: '/ufotwoblink.png', duration: 1000 },   // 1 second
     { src: '/ufo.png', duration: 2000 }            // 2 seconds
-  ];
+  ], []);
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
