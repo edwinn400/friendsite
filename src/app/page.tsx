@@ -340,8 +340,6 @@ export default function Home() {
     why4: "",
     why5: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   // Handle form input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, formType: string) => {
@@ -366,9 +364,7 @@ export default function Home() {
   // Handle form submissions
   const handleSubmit = async (e: React.FormEvent, type: string) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    setError(null);
-
+    
     try {
       let submissionData;
       
@@ -488,13 +484,11 @@ export default function Home() {
         
         alert(result.message);
       } else {
-        setError(result.error || 'Failed to submit');
+        alert(result.error || 'Failed to submit');
       }
     } catch (error) {
       console.error('Submission error:', error);
-      setError('Failed to submit. Please try again.');
-    } finally {
-      setIsSubmitting(false);
+      alert('Failed to submit. Please try again.');
     }
   };
 
@@ -564,13 +558,7 @@ export default function Home() {
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               placeholder="Enter your name (optional)"
               className="w-full p-4 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-lg placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
-              disabled={isSubmitting}
             />
-            {error && (
-              <div className="mt-3 text-red-400 text-sm">
-                {error}
-              </div>
-            )}
           </div>
         </div>
 
@@ -624,7 +612,6 @@ export default function Home() {
                         onChange={(e) => handleInputChange(e, 'movies')}
                         placeholder={`Enter your #${num} favorite movie`}
                         className="w-full p-4 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-lg placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
-                        disabled={isSubmitting}
                       />
                     </div>
                     <div>
@@ -652,7 +639,6 @@ export default function Home() {
                                 }
                               }}
                               className="w-4 h-4 mt-0.5 text-[#1e90ff] bg-[rgba(17,34,102,0.8)] border-[rgba(255,255,255,0.2)] rounded focus:ring-[#1e90ff] focus:ring-2 flex-shrink-0"
-                              disabled={isSubmitting}
                             />
                             <span className="text-sm text-white leading-relaxed break-words">{genre}</span>
                           </label>
@@ -669,17 +655,15 @@ export default function Home() {
                         placeholder="Reveal your brainwave data..."
                         className="w-full p-3 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-md placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
                         rows={3}
-                        disabled={isSubmitting}
                       />
                     </div>
                   </div>
                 ))}
                 <button
                   type="submit"
-                  disabled={isSubmitting}
                   className="w-full bg-gradient-to-r from-[#1e90ff] to-[#00bfff] hover:from-[#00bfff] hover:to-[#1e90ff] text-white font-bold py-4 px-8 rounded-2xl text-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 >
-                  {isSubmitting ? 'Submitting...' : 'Submit Movies'}
+                  Submit Movies
                 </button>
               </form>
             </div>
@@ -706,7 +690,6 @@ export default function Home() {
                         onChange={(e) => handleInputChange(e, 'shows')}
                         placeholder={`Enter your #${num} favorite show`}
                         className="w-full p-4 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-lg placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
-                        disabled={isSubmitting}
                       />
                     </div>
                     <div>
@@ -734,7 +717,6 @@ export default function Home() {
                                 }
                               }}
                               className="w-4 h-4 mt-0.5 text-[#1e90ff] bg-[rgba(17,34,102,0.8)] border-[rgba(255,255,255,0.2)] rounded focus:ring-[#1e90ff] focus:ring-2 flex-shrink-0"
-                              disabled={isSubmitting}
                             />
                             <span className="text-sm text-white leading-relaxed break-words">{genre}</span>
                           </label>
@@ -751,17 +733,15 @@ export default function Home() {
                         placeholder="Reveal your brainwave data..."
                         className="w-full p-3 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-md placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
                         rows={3}
-                        disabled={isSubmitting}
                       />
                     </div>
                   </div>
                 ))}
                 <button
                   type="submit"
-                  disabled={isSubmitting}
                   className="w-full bg-gradient-to-r from-[#1e90ff] to-[#00bfff] hover:from-[#00bfff] hover:to-[#1e90ff] text-white font-bold py-4 px-8 rounded-2xl text-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 >
-                  {isSubmitting ? 'Submitting...' : 'Submit Shows'}
+                  Submit Shows
                 </button>
               </form>
             </div>
@@ -788,7 +768,6 @@ export default function Home() {
                         onChange={(e) => handleInputChange(e, 'music')}
                         placeholder={`Enter your #${num} favorite song`}
                         className="w-full p-4 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-lg placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
-                        disabled={isSubmitting}
                       />
                     </div>
                     <div>
@@ -803,7 +782,6 @@ export default function Home() {
                         onChange={(e) => handleInputChange(e, 'music')}
                         placeholder={`Enter the artist for your #${num} song`}
                         className="w-full p-4 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-lg placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
-                        disabled={isSubmitting}
                       />
                     </div>
                     <div>
@@ -816,17 +794,15 @@ export default function Home() {
                         placeholder="Reveal your brainwave data..."
                         className="w-full p-3 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-md placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
                         rows={3}
-                        disabled={isSubmitting}
                       />
                     </div>
                   </div>
                 ))}
                 <button
                   type="submit"
-                  disabled={isSubmitting}
                   className="w-full bg-gradient-to-r from-[#1e90ff] to-[#00bfff] hover:from-[#00bfff] hover:to-[#1e90ff] text-white font-bold py-4 px-8 rounded-2xl text-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 >
-                  {isSubmitting ? 'Submitting...' : 'Submit Songs'}
+                  Submit Songs
                 </button>
               </form>
             </div>
@@ -853,7 +829,6 @@ export default function Home() {
                         onChange={(e) => handleInputChange(e, 'books')}
                         placeholder={`Enter your #${num} favorite book`}
                         className="w-full p-4 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-lg placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
-                        disabled={isSubmitting}
                       />
                     </div>
                     <div>
@@ -868,7 +843,6 @@ export default function Home() {
                         onChange={(e) => handleInputChange(e, 'books')}
                         placeholder={`Enter the author for your #${num} book`}
                         className="w-full p-4 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-lg placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
-                        disabled={isSubmitting}
                       />
                     </div>
                     <div>
@@ -881,17 +855,15 @@ export default function Home() {
                         placeholder="Reveal your brainwave data..."
                         className="w-full p-3 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-md placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
                         rows={3}
-                        disabled={isSubmitting}
                       />
                     </div>
                   </div>
                 ))}
                 <button
                   type="submit"
-                  disabled={isSubmitting}
                   className="w-full bg-gradient-to-r from-[#1e90ff] to-[#00bfff] hover:from-[#00bfff] hover:to-[#1e90ff] text-white font-bold py-4 px-8 rounded-2xl text-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 >
-                  {isSubmitting ? 'Submitting...' : 'Submit Books'}
+                  Submit Books
                 </button>
               </form>
             </div>
