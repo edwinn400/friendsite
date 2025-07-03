@@ -583,7 +583,7 @@ export default function Home() {
                 <div className="text-3xl mb-2">
                   <AnimatedFrog type={tab.type} />
                 </div>
-                <div className="font-[var(--font-orbitron)] font-bold text-lg">{tab.label}</div>
+                <div className="font-[var(--font-orbitron)] font-bold tracking-tighter text-lg sm:text-xs md:text-lg">{tab.label}</div>
               </button>
             ))}
           </div>
