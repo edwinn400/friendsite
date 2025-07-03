@@ -563,7 +563,7 @@ export default function Home() {
         </div>
 
         {/* Tabs */}
-        <div className="max-w-2xl mx-auto pb-8">
+        <div className="flex w-full max-w-4xl mb-8">
           <div className="flex w-full justify-center gap-2">
             <button
               onClick={() => setActiveTab('movies')}
