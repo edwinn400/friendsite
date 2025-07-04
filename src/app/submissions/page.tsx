@@ -658,6 +658,12 @@ export default function SubmissionsPage() {
     return submission.type === activeTab;
   });
 
+  // Add a handleDelete function
+  const handleDelete = (id: string, type: string) => {
+    // Placeholder: show alert for now
+    alert(`Delete submission ${id} of type ${type}`);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#0a174e] via-[#1a2a6b] to-[#0f3460] text-white flex items-center justify-center">
@@ -830,7 +836,12 @@ export default function SubmissionsPage() {
                     }
 
                     return (
-                      <div key={submission.id} className="bg-gradient-to-br from-[rgba(20,30,60,0.95)] to-[rgba(30,50,100,0.95)] backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-[rgba(255,255,255,0.1)] hover:border-[rgba(30,144,255,0.3)] transition-all duration-300 transform hover:scale-105">
+                      <div key={submission.id} className="bg-gradient-to-br from-[rgba(20,30,60,0.95)] to-[rgba(30,50,100,0.95)] backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-[rgba(255,255,255,0.1)] hover:border-[rgba(30,144,255,0.3)] transition-all duration-300 transform hover:scale-105 relative">
+                        {/* Edit/Delete Buttons */}
+                        <div className="absolute top-4 right-4 flex gap-2 z-10">
+                          <button className="px-3 py-1 rounded-lg bg-[rgba(30,144,255,0.15)] text-xs text-[#1e90ff] font-bold border border-[#1e90ff] hover:bg-[#1e90ff] hover:text-white transition" onClick={() => alert('Edit functionality coming soon!')}>Edit</button>
+                          <button className="px-3 py-1 rounded-lg bg-[rgba(255,0,0,0.12)] text-xs text-red-400 font-bold border border-red-400 hover:bg-red-500 hover:text-white transition" onClick={() => handleDelete(submission.id, submission.type)}>Delete</button>
+                        </div>
                         {/* User Header */}
                         <div className="flex items-center mb-6">
                           <div className="flex-1">
