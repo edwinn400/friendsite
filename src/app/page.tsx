@@ -566,8 +566,20 @@ export default function Home() {
             <input
               type="text"
               id="name"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              value={
+                activeTab === 'movies' ? formData.name :
+                activeTab === 'shows' ? showFormData.name :
+                activeTab === 'music' ? musicFormData.name :
+                activeTab === 'books' ? bookFormData.name :
+                ''
+              }
+              onChange={(e) => {
+                const value = e.target.value;
+                if (activeTab === 'movies') setFormData(prev => ({ ...prev, name: value }));
+                else if (activeTab === 'shows') setShowFormData(prev => ({ ...prev, name: value }));
+                else if (activeTab === 'music') setMusicFormData(prev => ({ ...prev, name: value }));
+                else if (activeTab === 'books') setBookFormData(prev => ({ ...prev, name: value }));
+              }}
               placeholder="Enter your name"
               className="w-full p-4 rounded-xl border-2 border-[rgba(255,255,255,0.2)] bg-[rgba(17,34,102,0.8)] text-white text-lg placeholder-gray-400 focus:border-[#1e90ff] focus:outline-none focus:ring-2 focus:ring-[#1e90ff] focus:ring-opacity-50 transition-all duration-300"
               required
