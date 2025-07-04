@@ -643,17 +643,6 @@ export default function SubmissionsPage() {
     }
   };
 
-  const getTypeIcon = (type: string) => {
-    switch (type) {
-      case 'movie': return <AnimatedFrog type="movies" />;
-      case 'show': return <AnimatedFrog type="shows" />;
-      case 'music': return <AnimatedFrog type="music" />;
-      case 'book': return <AnimatedFrog type="books" />;
-      case 'art': return <AnimatedFrog type="art" />;
-      default: return <AnimatedFrog type="default" />;
-    }
-  };
-
   const getTypeLabel = (type: string) => {
     switch (type) {
       case 'movie': return 'Movies';
