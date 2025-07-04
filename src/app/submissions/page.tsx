@@ -687,7 +687,8 @@ export default function SubmissionsPage() {
         return;
       }
       alert(data1.error || data2.error || 'Failed to delete submission.');
-    } catch (err) {
+    } catch (error) {
+      console.error('Error deleting submission:', error);
       alert('Error deleting submission.');
     }
   };
