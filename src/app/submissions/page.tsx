@@ -659,9 +659,37 @@ export default function SubmissionsPage() {
   });
 
   // Add a handleDelete function
-  const handleDelete = (id: string, type: string) => {
-    // Placeholder: show alert for now
-    alert(`Delete submission ${id} of type ${type}`);
+  const handleDelete = async (id: string, type: string) => {
+    if (!window.confirm('Are you sure you want to delete this submission? This cannot be undone.')) return;
+    try {
+      // Try both possible key formats
+      const res1 = await fetch('/api/admin/edit-submission', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ submissionId: `${type}_submission:${id}` })
+      });
+      const data1 = await res1.json();
+      if (data1.success) {
+        setSubmissions(subs => subs.filter(s => s.id !== id));
+        alert('Submission deleted successfully.');
+        return;
+      }
+      // Try fallback key
+      const res2 = await fetch('/api/admin/edit-submission', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ submissionId: `submission:${id}` })
+      });
+      const data2 = await res2.json();
+      if (data2.success) {
+        setSubmissions(subs => subs.filter(s => s.id !== id));
+        alert('Submission deleted successfully.');
+        return;
+      }
+      alert(data1.error || data2.error || 'Failed to delete submission.');
+    } catch (err) {
+      alert('Error deleting submission.');
+    }
   };
 
   if (loading) {
