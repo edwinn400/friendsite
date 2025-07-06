@@ -35,10 +35,11 @@ export async function PUT(request: NextRequest) {
     
     console.log(`📝 Admin editing submission: ${submissionId}`);
     
+    // The submissionId should already be in the correct format (e.g., "book_submission:1751520861685")
     // Get current submission
-    const submission = await redis.hgetall(`submission:${submissionId}`);
+    const submission = await redis.get(submissionId);
     
-    if (!submission || Object.keys(submission).length === 0) {
+    if (!submission) {
       return NextResponse.json(
         { error: 'Submission not found' },
         { status: 404 }
@@ -49,7 +50,7 @@ export async function PUT(request: NextRequest) {
     const updatedSubmission = { ...submission, ...updates };
     
     // Save back to Redis
-    await redis.hset(`submission:${submissionId}`, updatedSubmission);
+    await redis.set(submissionId, updatedSubmission);
     
     console.log('✅ Admin updated submission successfully');
     
@@ -81,11 +82,24 @@ export async function DELETE(request: NextRequest) {
     
     console.log(`🗑️ Admin deleting submission: ${submissionId}`);
     
-    // Remove from submissions sorted set
-    await redis.zrem('submissions', submissionId);
+    // The submissionId should already be in the correct format (e.g., "book_submission:1751520861685")
+    // Extract the type and id from the submissionId
+    const parts = submissionId.split(':');
+    if (parts.length !== 2) {
+      return NextResponse.json(
+        { error: 'Invalid submissionId format' },
+        { status: 400 }
+      );
+    }
+    
+    const [typeWithSubmission, id] = parts;
+    const type = typeWithSubmission.replace('_submission', '');
+    
+    // Remove from type-specific submissions sorted set
+    await redis.zrem(`${type}_submissions`, id);
     
     // Delete the submission data
-    await redis.del(`submission:${submissionId}`);
+    await redis.del(submissionId);
     
     console.log('✅ Admin deleted submission successfully');
     
