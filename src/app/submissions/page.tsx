@@ -309,11 +309,311 @@ const AnimatedUFO = () => {
   );
 };
 
+// Edit Modal Component
+const EditModal = ({ submission, isOpen, onClose, onSave }: { 
+  submission: Submission | null; 
+  isOpen: boolean; 
+  onClose: () => void; 
+  onSave: (updatedSubmission: Submission) => void; 
+}) => {
+  const [formData, setFormData] = useState<Submission | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (submission) {
+      setFormData({ ...submission });
+    }
+  }, [submission]);
+
+  if (!isOpen || !submission || !formData) return null;
+
+  const handleInputChange = (field: string, value: string | string[], index?: number) => {
+    if (index !== undefined) {
+      setFormData(prev => prev ? {
+        ...prev,
+        [field + (index + 1)]: value
+      } : null);
+    } else {
+      setFormData(prev => prev ? {
+        ...prev,
+        [field]: value
+      } : null);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData) return;
+
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/admin/edit-submission', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          submissionId: `${submission.type}_submission:${submission.id}`,
+          updates: formData
+        }),
+      });
+
+      if (response.ok) {
+        onSave(formData);
+        onClose();
+      } else {
+        const error = await response.json();
+        alert(`Error updating submission: ${error.error}`);
+      }
+    } catch (error) {
+      console.error('Error updating submission:', error);
+      alert('Error updating submission. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const renderEditFields = () => {
+    switch (submission.type) {
+      case 'movie':
+        return (
+          <>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-300 mb-2">Name</label>
+              <input
+                type="text"
+                value={formData.name || ''}
+                onChange={(e) => handleInputChange('name', e.target.value)}
+                className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
+                required
+              />
+            </div>
+            {[1, 2, 3, 4, 5].map((num) => (
+              <div key={num} className="mb-4">
+                <label className="block text-sm font-medium text-gray-300 mb-2">Movie {num}</label>
+                <input
+                  type="text"
+                  value={formData[`movie${num}` as keyof Submission] as string || ''}
+                  onChange={(e) => handleInputChange('movie', e.target.value, num - 1)}
+                  className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
+                />
+                <label className="block text-sm font-medium text-gray-300 mb-2 mt-2">Genres (comma-separated)</label>
+                <input
+                  type="text"
+                  value={Array.isArray(formData[`genres${num}` as keyof Submission]) ? (formData[`genres${num}` as keyof Submission] as string[])?.join(', ') || '' : ''}
+                  onChange={(e) => handleInputChange(`genres${num}`, e.target.value.split(',').map(g => g.trim()).filter(g => g))}
+                  className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
+                />
+                <label className="block text-sm font-medium text-gray-300 mb-2 mt-2">Why do you like it?</label>
+                <textarea
+                  value={formData[`why${num}` as keyof Submission] as string || ''}
+                  onChange={(e) => handleInputChange('why', e.target.value, num - 1)}
+                  className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500 h-20"
+                />
+              </div>
+            ))}
+          </>
+        );
+      case 'show':
+        return (
+          <>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-300 mb-2">Name</label>
+              <input
+                type="text"
+                value={formData.name || ''}
+                onChange={(e) => handleInputChange('name', e.target.value)}
+                className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
+                required
+              />
+            </div>
+            {[1, 2, 3, 4, 5].map((num) => (
+              <div key={num} className="mb-4">
+                <label className="block text-sm font-medium text-gray-300 mb-2">Show {num}</label>
+                <input
+                  type="text"
+                  value={formData[`show${num}` as keyof Submission] as string || ''}
+                  onChange={(e) => handleInputChange('show', e.target.value, num - 1)}
+                  className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
+                />
+                <label className="block text-sm font-medium text-gray-300 mb-2 mt-2">Genres (comma-separated)</label>
+                <input
+                  type="text"
+                  value={Array.isArray(formData[`genres${num}` as keyof Submission]) ? (formData[`genres${num}` as keyof Submission] as string[])?.join(', ') || '' : ''}
+                  onChange={(e) => handleInputChange(`genres${num}`, e.target.value.split(',').map(g => g.trim()).filter(g => g))}
+                  className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
+                />
+                <label className="block text-sm font-medium text-gray-300 mb-2 mt-2">Why do you like it?</label>
+                <textarea
+                  value={formData[`why${num}` as keyof Submission] as string || ''}
+                  onChange={(e) => handleInputChange('why', e.target.value, num - 1)}
+                  className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500 h-20"
+                />
+              </div>
+            ))}
+          </>
+        );
+      case 'music':
+        return (
+          <>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-300 mb-2">Name</label>
+              <input
+                type="text"
+                value={formData.name || ''}
+                onChange={(e) => handleInputChange('name', e.target.value)}
+                className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
+                required
+              />
+            </div>
+            {[1, 2, 3, 4, 5].map((num) => (
+              <div key={num} className="mb-4">
+                <label className="block text-sm font-medium text-gray-300 mb-2">Song {num}</label>
+                <input
+                  type="text"
+                  value={formData[`music${num}` as keyof Submission] as string || ''}
+                  onChange={(e) => handleInputChange('music', e.target.value, num - 1)}
+                  className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
+                />
+                <label className="block text-sm font-medium text-gray-300 mb-2 mt-2">Artist</label>
+                <input
+                  type="text"
+                  value={formData[`artist${num}` as keyof Submission] as string || ''}
+                  onChange={(e) => handleInputChange('artist', e.target.value, num - 1)}
+                  className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
+                />
+                <label className="block text-sm font-medium text-gray-300 mb-2 mt-2">Why do you like it?</label>
+                <textarea
+                  value={formData[`why${num}` as keyof Submission] as string || ''}
+                  onChange={(e) => handleInputChange('why', e.target.value, num - 1)}
+                  className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500 h-20"
+                />
+              </div>
+            ))}
+          </>
+        );
+      case 'book':
+        return (
+          <>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-300 mb-2">Name</label>
+              <input
+                type="text"
+                value={formData.name || ''}
+                onChange={(e) => handleInputChange('name', e.target.value)}
+                className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
+                required
+              />
+            </div>
+            {[1, 2, 3, 4, 5].map((num) => (
+              <div key={num} className="mb-4">
+                <label className="block text-sm font-medium text-gray-300 mb-2">Book {num}</label>
+                <input
+                  type="text"
+                  value={formData[`book${num}` as keyof Submission] as string || ''}
+                  onChange={(e) => handleInputChange('book', e.target.value, num - 1)}
+                  className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
+                />
+                <label className="block text-sm font-medium text-gray-300 mb-2 mt-2">Author</label>
+                <input
+                  type="text"
+                  value={formData[`author${num}` as keyof Submission] as string || ''}
+                  onChange={(e) => handleInputChange('author', e.target.value, num - 1)}
+                  className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
+                />
+                <label className="block text-sm font-medium text-gray-300 mb-2 mt-2">Why do you like it?</label>
+                <textarea
+                  value={formData[`why${num}` as keyof Submission] as string || ''}
+                  onChange={(e) => handleInputChange('why', e.target.value, num - 1)}
+                  className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500 h-20"
+                />
+              </div>
+            ))}
+          </>
+        );
+      case 'art':
+        return (
+          <>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-300 mb-2">Name</label>
+              <input
+                type="text"
+                value={formData.name || ''}
+                onChange={(e) => handleInputChange('name', e.target.value)}
+                className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-300 mb-2">Art Piece</label>
+              <input
+                type="text"
+                value={formData.artPiece || ''}
+                onChange={(e) => handleInputChange('artPiece', e.target.value)}
+                className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-300 mb-2">Art File</label>
+              <input
+                type="text"
+                value={formData.artFile || ''}
+                onChange={(e) => handleInputChange('artFile', e.target.value)}
+                className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
+              />
+            </div>
+          </>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-gray-900 rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-white">Edit {submission.type.charAt(0).toUpperCase() + submission.type.slice(1)} Submission</h2>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-white text-2xl font-bold"
+          >
+            ×
+          </button>
+        </div>
+        
+        <form onSubmit={handleSubmit}>
+          {renderEditFields()}
+          
+          <div className="flex gap-4 mt-6">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+            >
+              {isLoading ? 'Saving...' : 'Save Changes'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 export default function SubmissionsPage() {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'movie' | 'show' | 'music' | 'book'>('movie');
+  const [editingSubmission, setEditingSubmission] = useState<Submission | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
     fetchSubmissions();
@@ -868,7 +1168,7 @@ export default function SubmissionsPage() {
                       <div key={submission.id} className="bg-gradient-to-br from-[rgba(20,30,60,0.95)] to-[rgba(30,50,100,0.95)] backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-[rgba(255,255,255,0.1)] hover:border-[rgba(30,144,255,0.3)] transition-all duration-300 transform hover:scale-105 relative">
                         {/* Edit/Delete Buttons */}
                         <div className="absolute top-4 right-4 flex gap-2 z-10">
-                          <button className="px-3 py-1 rounded-lg bg-[rgba(30,144,255,0.15)] text-xs text-[#1e90ff] font-bold border border-[#1e90ff] hover:bg-[#1e90ff] hover:text-white transition" onClick={() => alert('Edit functionality coming soon!')}>Edit</button>
+                          <button className="px-3 py-1 rounded-lg bg-[rgba(30,144,255,0.15)] text-xs text-[#1e90ff] font-bold border border-[#1e90ff] hover:bg-[#1e90ff] hover:text-white transition" onClick={() => { setEditingSubmission(submission); setIsEditModalOpen(true); }}>Edit</button>
                           <button className="px-3 py-1 rounded-lg bg-[rgba(255,0,0,0.12)] text-xs text-red-400 font-bold border border-red-400 hover:bg-red-500 hover:text-white transition" onClick={() => handleDelete(submission.id, submission.type)}>Delete</button>
                         </div>
                         {/* User Header */}
@@ -930,6 +1230,19 @@ export default function SubmissionsPage() {
           }
         })()}
       </div>
+
+      {editingSubmission && (
+        <EditModal
+          submission={editingSubmission}
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          onSave={(updatedSubmission) => {
+            setSubmissions(prev => prev.map(s => s.id === updatedSubmission.id ? updatedSubmission : s));
+            setEditingSubmission(null);
+            setIsEditModalOpen(false);
+          }}
+        />
+      )}
     </div>
   );
 } 
