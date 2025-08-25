@@ -614,6 +614,7 @@ export default function SubmissionsPage() {
   const [activeTab, setActiveTab] = useState<'movie' | 'show' | 'music' | 'book'>('movie');
   const [editingSubmission, setEditingSubmission] = useState<Submission | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [expandedSubmissions, setExpandedSubmissions] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     fetchSubmissions();
@@ -644,6 +645,20 @@ export default function SubmissionsPage() {
       setLoading(false);
     }
   };
+
+  const toggleSubmission = (submissionId: string) => {
+    setExpandedSubmissions(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(submissionId)) {
+        newSet.delete(submissionId);
+      } else {
+        newSet.add(submissionId);
+      }
+      return newSet;
+    });
+  };
+
+  const isExpanded = (submissionId: string) => expandedSubmissions.has(submissionId);
 
   const renderEntry = (entry: string | undefined, index: number, genres?: string[], why?: string) => {
     if (!entry) return null;
@@ -1156,7 +1171,7 @@ export default function SubmissionsPage() {
             }
 
             return (
-              <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              <div className="space-y-4">
                 {filteredSubmissions.map((submission, index) => {
                   try {
                     if (!submission || !submission.id) {
@@ -1164,37 +1179,77 @@ export default function SubmissionsPage() {
                       return null;
                     }
 
+                    const expanded = isExpanded(submission.id);
+
                     return (
-                      <div key={submission.id} className="bg-gradient-to-br from-[rgba(20,30,60,0.95)] to-[rgba(30,50,100,0.95)] backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-[rgba(255,255,255,0.1)] hover:border-[rgba(30,144,255,0.3)] transition-all duration-300 transform hover:scale-105 relative">
-                        {/* Edit/Delete Buttons */}
-                        <div className="absolute top-4 right-4 flex gap-2 z-10">
-                          <button className="px-3 py-1 rounded-lg bg-[rgba(30,144,255,0.15)] text-xs text-[#1e90ff] font-bold border border-[#1e90ff] hover:bg-[#1e90ff] hover:text-white transition" onClick={() => { setEditingSubmission(submission); setIsEditModalOpen(true); }}>Edit</button>
-                          <button className="px-3 py-1 rounded-lg bg-[rgba(255,0,0,0.12)] text-xs text-red-400 font-bold border border-red-400 hover:bg-red-500 hover:text-white transition" onClick={() => handleDelete(submission.id, submission.type)}>Delete</button>
-                        </div>
-                        {/* User Header */}
-                        <div className="flex items-center mb-6">
-                          <div className="flex-1">
-                            <h3 className="text-2xl font-bold text-[#1e90ff]">{submission.name || 'Anonymous'}</h3>
+                      <div key={submission.id} className="bg-gradient-to-br from-[rgba(20,30,60,0.95)] to-[rgba(30,50,100,0.95)] backdrop-blur-sm rounded-3xl shadow-2xl border border-[rgba(255,255,255,0.1)] hover:border-[rgba(30,144,255,0.3)] transition-all duration-300 overflow-hidden">
+                        {/* Clickable Header */}
+                        <div 
+                          className="p-6 cursor-pointer hover:bg-[rgba(30,144,255,0.1)] transition-all duration-300"
+                          onClick={() => toggleSubmission(submission.id)}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center">
+                              <h3 className="text-2xl font-bold text-[#1e90ff] mr-4">
+                                {submission.name || 'Anonymous'}
+                              </h3>
+                              <span className="text-sm text-gray-400 bg-[rgba(255,255,255,0.1)] px-3 py-1 rounded-full">
+                                {submission.type.charAt(0).toUpperCase() + submission.type.slice(1)}s
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              {/* Edit/Delete Buttons */}
+                              <button 
+                                className="px-3 py-1 rounded-lg bg-[rgba(30,144,255,0.15)] text-xs text-[#1e90ff] font-bold border border-[#1e90ff] hover:bg-[#1e90ff] hover:text-white transition"
+                                onClick={(e) => { 
+                                  e.stopPropagation(); 
+                                  setEditingSubmission(submission); 
+                                  setIsEditModalOpen(true); 
+                                }}
+                              >
+                                Edit
+                              </button>
+                              <button 
+                                className="px-3 py-1 rounded-lg bg-[rgba(255,0,0,0.12)] text-xs text-red-400 font-bold border border-red-400 hover:bg-red-500 hover:text-white transition"
+                                onClick={(e) => { 
+                                  e.stopPropagation(); 
+                                  handleDelete(submission.id, submission.type); 
+                                }}
+                              >
+                                Delete
+                              </button>
+                              {/* Expand/Collapse Arrow */}
+                              <div className={`transform transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`}>
+                                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                </svg>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                        {/* Content (no frogs, no type label, no date, no 'Top 5 ...') */}
-                        {(() => {
-                          // Render only the entries for the submission type, without heading or frog
-                          switch (submission.type) {
-                            case 'movie':
-                              return <>{renderEntry(submission.movie1, 0, submission.genres1, submission.why1)}{renderEntry(submission.movie2, 1, submission.genres2, submission.why2)}{renderEntry(submission.movie3, 2, submission.genres3, submission.why3)}{renderEntry(submission.movie4, 3, submission.genres4, submission.why4)}{renderEntry(submission.movie5, 4, submission.genres5, submission.why5)}</>;
-                            case 'show':
-                              return <>{renderEntry(submission.show1, 0, submission.genres1, submission.why1)}{renderEntry(submission.show2, 1, submission.genres2, submission.why2)}{renderEntry(submission.show3, 2, submission.genres3, submission.why3)}{renderEntry(submission.show4, 3, submission.genres4, submission.why4)}{renderEntry(submission.show5, 4, submission.genres5, submission.why5)}</>;
-                            case 'music':
-                              return <>{renderSubmissionContent({ ...submission, type: 'music' }).props.children.slice(1)}</>;
-                            case 'book':
-                              return <>{renderSubmissionContent({ ...submission, type: 'book' }).props.children.slice(1)}</>;
-                            case 'art':
-                              return <>{renderSubmissionContent({ ...submission, type: 'art' }).props.children.slice(1)}</>;
-                            default:
-                              return null;
-                          }
-                        })()}
+
+                        {/* Expandable Content */}
+                        <div className={`transition-all duration-300 ease-in-out ${expanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                          <div className="px-6 pb-6 border-t border-[rgba(255,255,255,0.1)]">
+                            {(() => {
+                              // Render only the entries for the submission type, without heading or frog
+                              switch (submission.type) {
+                                case 'movie':
+                                  return <>{renderEntry(submission.movie1, 0, submission.genres1, submission.why1)}{renderEntry(submission.movie2, 1, submission.genres2, submission.why2)}{renderEntry(submission.movie3, 2, submission.genres3, submission.why3)}{renderEntry(submission.movie4, 3, submission.genres4, submission.why4)}{renderEntry(submission.movie5, 4, submission.genres5, submission.why5)}</>;
+                                case 'show':
+                                  return <>{renderEntry(submission.show1, 0, submission.genres1, submission.why1)}{renderEntry(submission.show2, 1, submission.genres2, submission.why2)}{renderEntry(submission.show3, 2, submission.genres3, submission.why3)}{renderEntry(submission.show4, 3, submission.genres4, submission.why4)}{renderEntry(submission.show5, 4, submission.genres5, submission.why5)}</>;
+                                case 'music':
+                                  return <>{renderSubmissionContent({ ...submission, type: 'music' }).props.children.slice(1)}</>;
+                                case 'book':
+                                  return <>{renderSubmissionContent({ ...submission, type: 'book' }).props.children.slice(1)}</>;
+                                case 'art':
+                                  return <>{renderSubmissionContent({ ...submission, type: 'art' }).props.children.slice(1)}</>;
+                                default:
+                                  return null;
+                              }
+                            })()}
+                          </div>
+                        </div>
                       </div>
                     );
                   } catch (submissionError) {
