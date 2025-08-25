@@ -1145,6 +1145,7 @@ export default function SubmissionsPage() {
         </div>
 
         {/* Submissions Grid */}
+        <div className="mt-12">
         {(() => {
           try {
             if (!filteredSubmissions || !Array.isArray(filteredSubmissions) || filteredSubmissions.length === 0) {
@@ -1284,6 +1285,7 @@ export default function SubmissionsPage() {
             );
           }
         })()}
+        </div>
       </div>
 
       {editingSubmission && (
